@@ -25,6 +25,11 @@ class Branch extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function Customers(): HasMany
+    {
+        return $this->hasMany(Customer::class);
+    } 
+
     public function Deposits(): HasMany
     {
         return $this->hasMany(Cashier_Deposit::class);

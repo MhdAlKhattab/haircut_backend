@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BranchController;
+use App\Http\Controllers\CustomerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,12 +36,18 @@ Route::group(['middleware' => 'auth:api'], function(){
 
     // User
     Route::get('/user',[UserController::class,'Me']);   
-    Route::put('/user',[userController::class,'Update']);
+    Route::put('/user',[userController::class,'updateUser']);
 
     // Branch
-    Route::post('/add-branch',[BranchController::class,'addBranch']);
-    Route::get('/get-branches',[BranchController::class,'getBranches']);
-    Route::delete('/delete-branch/{id}',[BranchController::class,'deleteBranch']);
+    Route::post('/branch',[BranchController::class,'addBranch']);
+    Route::get('/branch',[BranchController::class,'getBranches']);
+    Route::delete('/branch/{id}',[BranchController::class,'deleteBranch']);
+
+    // Customer
+    Route::post('/customer',[CustomerController::class,'addCustomer']);
+    Route::get('/customer/{branch}',[CustomerController::class,'getCustomers']);
+    Route::put('/customer/{id}',[CustomerController::class,'updateCustomer']);
+    Route::delete('/customer/{id}',[CustomerController::class,'deleteCustomer']);
     
 
 });
