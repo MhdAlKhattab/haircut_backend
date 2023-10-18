@@ -11,7 +11,7 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $table = 'services';
+    protected $table = 'products';
 
     protected $primaryKey = 'id';
 
