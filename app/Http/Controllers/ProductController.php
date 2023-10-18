@@ -66,7 +66,7 @@ class ProductController extends Controller
     {
         $branch = Branch::find($branch_id);
 
-        return response()->json($branch->products, 200);
+        return response()->json($branch->Products, 200);
     }
 
     public function updateProduct(Request $request, $id)
@@ -133,6 +133,6 @@ class ProductController extends Controller
         }
 
         $product->delete();
-        return response()->json(['message' => "product Deleted"], 200);
+        return response()->json(['message' => "Product Deleted"], 200);
     }
 }
