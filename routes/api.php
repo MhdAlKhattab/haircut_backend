@@ -9,6 +9,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\GeneralServiceProviderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\SupplierController;
 
 /*
 |--------------------------------------------------------------------------
@@ -69,6 +70,12 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::get('/service/{branch}',[ServiceController::class,'getServices']);
     Route::put('/service/{id}',[ServiceController::class,'updateService']);
     Route::delete('/service/{id}',[ServiceController::class,'deleteService']);
+
+    // Supplier
+    Route::post('/supplier',[SupplierController::class,'addSupplier']);
+    Route::get('/supplier/{branch}',[SupplierController::class,'getSuppliers']);
+    Route::put('/supplier/{id}',[SupplierController::class,'updateSupplier']);
+    Route::delete('/supplier/{id}',[SupplierController::class,'deleteSupplier']);
     
 });
 
