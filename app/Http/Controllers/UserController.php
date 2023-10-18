@@ -9,7 +9,8 @@ use App\Models\User;
 
 class UserController extends Controller
 {
-    public function Me(){
+    public function Me()
+    {
         return response()->json([
             'user' => Auth::user()
         ], 200);

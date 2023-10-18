@@ -20,8 +20,7 @@ class Branch extends Model
         'branch_name',
     ];
 
-    // For Manager
-    public function User(): BelongsTo
+    public function Manager(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

@@ -22,10 +22,10 @@ class AuthController extends Controller
         ]);
     }
 
-    public function AddBarber(Request $request)
+    public function addBarber(Request $request)
     {
         if (Auth::user()->role != 1){
-            return response()->json(['errors'=>'Access Denied, You Can Not Add Braber'], 403);
+            return response()->json(['message'=>'Access Denied, You Can Not Add Braber'], 403);
         }
 
         $validatedData = $this->validator($request->all());
@@ -51,7 +51,7 @@ class AuthController extends Controller
         ], 200);
     }
 
-    public function AddManager(Request $request)
+    public function addManager(Request $request)
     {
         $validatedData = $this->validator($request->all());
         if ($validatedData->fails())  {
@@ -90,18 +90,26 @@ class AuthController extends Controller
 
         $token = $user->createToken('Laravel Password Grant Client')->accessToken;
 
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-            'role' => $user->role,
-        ], 200);
+        if ($user->branch_id) {
+            return response()->json([
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+                'role' => $user->role,
+                'branch_id' => $user->branch_id,
+            ], 200);
+        }else {
+            return response()->json([
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+                'role' => $user->role,
+            ], 200);
+        }
     }
 
     public function Logout() {
         $token = Auth::user()->token();
         $token->revoke();
 
-        $response = ['message' => 'You have been successfully logged out!'];
-        return response()->json($response, 200);
+        return response()->json(['message' => 'You Have Been Successfully Logged Out!'], 200);
     }
 }

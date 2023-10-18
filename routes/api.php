@@ -4,9 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\FAQController;
-use App\Http\Controllers\TokenController;
-use App\Http\Controllers\CounterController;
+use App\Http\Controllers\BranchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,24 +19,29 @@ use App\Http\Controllers\CounterController;
 
 // For Test
 Route::get('/test-online', function () {
-    // dd('Ok');
-    return 1;
+    dd('Ok');
 });
 
 // Auth
-Route::post('/add-manager',[AuthController::class,'AddManager']);
+Route::post('/add-manager',[AuthController::class,'addManager']);
 Route::post('/login',[AuthController::class,'Login']);
 
 
 Route::group(['middleware' => 'auth:api'], function(){
     
     // Auth
-    Route::post('/add-barber',[AuthController::class,'AddBarber']);
+    Route::post('/add-barber',[AuthController::class,'addBarber']);
     Route::post('/logout',[AuthController::class,'Logout']);
 
     // User
     Route::get('/user',[UserController::class,'Me']);   
     Route::put('/user',[userController::class,'Update']);
+
+    // Branch
+    Route::post('/add-branch',[BranchController::class,'addBranch']);
+    Route::get('/get-branches',[BranchController::class,'getBranches']);
+    Route::delete('/delete-branch/{id}',[BranchController::class,'deleteBranch']);
+    
 
 });
 
