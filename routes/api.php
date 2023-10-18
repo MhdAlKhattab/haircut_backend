@@ -35,11 +35,13 @@ Route::post('/login',[AuthController::class,'Login']);
 Route::group(['middleware' => 'auth:api'], function(){
     
     // Auth
-    Route::post('/add-barber',[AuthController::class,'addBarber']);
+    Route::post('/barber',[AuthController::class,'addBarber']);
+    Route::put('/barber/{id}',[AuthController::class,'updateBarber']);
     Route::post('/logout',[AuthController::class,'Logout']);
 
     // User
-    Route::get('/user',[UserController::class,'Me']);   
+    Route::get('/user',[UserController::class,'Me']);
+    Route::get('/user/{branch}',[UserController::class,'getUsers']);
     Route::put('/user',[userController::class,'updateUser']);
 
     // Branch

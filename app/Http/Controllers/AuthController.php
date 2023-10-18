@@ -42,13 +42,47 @@ class AuthController extends Controller
         ]);
         $user->save();
 
-        $token = $user->createToken('Laravel Password Grant Client')->accessToken;
+        return response()->json(['data' => $user], 200);
+    }
 
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-            'role' => 0,
-        ], 200);
+    public function updateBarber(Request $request, $id)
+    {
+        if (Auth::user()->role != 1){
+            return response()->json(['message'=>'Access Denied, You Can Not Add Braber'], 403);
+        }
+
+        $user = User::find($id);
+
+        if(!$user){
+            return response()->json(['errors' => 'There is no user with this id !'], 400);
+        }
+
+        $validatedData = Validator::make($request->all(),
+            [
+                'first_name' => 'string|max:255',
+                'last_name' => 'string|max:255',
+                'phone_number' => 'numeric|unique:users',
+                'password' => 'string|min:8',
+                'confirm_password' => 'string|same:password',   
+            ]
+        );
+
+        if($validatedData->fails()){
+            return response()->json(["errors"=>$validatedData->errors()], 400);
+        }
+
+        if($request['first_name'] != null)
+            $user->first_name = $request['first_name'];
+        if($request['last_name'] != null)
+            $user->last_name = $request['last_name'];
+        if($request['phone_number'] != null)
+            $user->phone_number = $request['phone_number'];
+        if($request['password'] != null)
+            $user->password = Hash::make($request['password']);
+
+        $user->save();
+
+        return response()->json(['data' => $user], 200);
     }
 
     public function addManager(Request $request)
@@ -67,13 +101,7 @@ class AuthController extends Controller
         ]);
         $user->save();
 
-        $token = $user->createToken('Laravel Password Grant Client')->accessToken;
-
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-            'role' => 1,
-        ], 200);
+        return response()->json(['data' => $user], 200);
     }
 
     public function Login(Request $request)

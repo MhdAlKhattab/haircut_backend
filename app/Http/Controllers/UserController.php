@@ -26,6 +26,8 @@ class UserController extends Controller
                 'first_name' => 'string|max:255',
                 'last_name' => 'string|max:255',
                 'phone_number' => 'numeric|unique:users',
+                'password' => 'string|min:8',
+                'confirm_password' => 'string|same:password',   
             ]
         );
 
@@ -39,9 +41,18 @@ class UserController extends Controller
             $user->last_name = $request['last_name'];
         if($request['phone_number'] != null)
             $user->phone_number = $request['phone_number'];
+        if($request['password'] != null)
+            $user->password = Hash::make($request['password']);
 
         $user->save();
 
         return response()->json(['data' => $user], 200);
+    }
+
+    public function getUsers($branch_id) {
+
+        $users = User::where('branch_id', $branch_id)->get();
+
+        return response()->json($users, 200);
     }
 }
