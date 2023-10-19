@@ -10,6 +10,7 @@ use App\Http\Controllers\GeneralServiceProviderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\SundryProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -78,6 +79,12 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::get('/supplier/{branch}',[SupplierController::class,'getSuppliers']);
     Route::put('/supplier/{id}',[SupplierController::class,'updateSupplier']);
     Route::delete('/supplier/{id}',[SupplierController::class,'deleteSupplier']);
+
+    // Sundry Product
+    Route::post('/sundry',[SundryProductController::class,'addSundryProduct']);
+    Route::get('/sundry/{branch}',[SundryProductController::class,'getSundryProducts']);
+    Route::put('/sundry/{id}',[SundryProductController::class,'updateSundryProduct']);
+    Route::delete('/sundry/{id}',[SundryProductController::class,'deleteSundryProduct']);
     
 });
 
