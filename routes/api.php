@@ -13,6 +13,8 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SundryProductController;
 use App\Http\Controllers\SalonDateController;
+use App\Http\Controllers\CashierDepositController;
+use App\Http\Controllers\CashierWithdrawController;
 
 /*
 |--------------------------------------------------------------------------
@@ -99,6 +101,18 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::get('/date/{branch}',[SalonDateController::class,'getSalonDates']);
     Route::put('/date/{id}',[SalonDateController::class,'updateSalonDate']);
     Route::delete('/date/{id}',[SalonDateController::class,'deleteSalonDate']);
+
+    // Cashier Deposit
+    Route::post('/deposit',[CashierDepositController::class,'addCashierDeposit']);
+    Route::get('/deposit/{branch}',[CashierDepositController::class,'getCashierDeposits']);
+    Route::put('/deposit/{id}',[CashierDepositController::class,'updateCashierDeposit']);
+    Route::delete('/deposit/{id}',[CashierDepositController::class,'deleteCashierDeposit']);
+
+    // Cashier Withdraw
+    Route::post('/withdraw',[CashierWithdrawController::class,'addCashierWithdraw']);
+    Route::get('/withdraw/{branch}',[CashierWithdrawController::class,'getCashierWithdraws']);
+    Route::put('/withdraw/{id}',[CashierWithdrawController::class,'updateCashierWithdraw']);
+    Route::delete('/withdraw/{id}',[CashierWithdrawController::class,'deleteCashierWithdraw']);
     
 });
 
