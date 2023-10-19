@@ -12,6 +12,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SundryProductController;
+use App\Http\Controllers\SalonDateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -92,6 +93,12 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::get('/sundry/{branch}',[SundryProductController::class,'getSundryProducts']);
     Route::put('/sundry/{id}',[SundryProductController::class,'updateSundryProduct']);
     Route::delete('/sundry/{id}',[SundryProductController::class,'deleteSundryProduct']);
+
+    // Salon Date
+    Route::post('/date',[SalonDateController::class,'addSalonDate']);
+    Route::get('/date/{branch}',[SalonDateController::class,'getSalonDates']);
+    Route::put('/date/{id}',[SalonDateController::class,'updateSalonDate']);
+    Route::delete('/date/{id}',[SalonDateController::class,'deleteSalonDate']);
     
 });
 
