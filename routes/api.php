@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\GeneralServiceProviderController;
 use App\Http\Controllers\GeneralServiceTermController;
 use App\Http\Controllers\ProductController;
@@ -59,6 +60,12 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::get('/customer/{branch}',[CustomerController::class,'getCustomers']);
     Route::put('/customer/{id}',[CustomerController::class,'updateCustomer']);
     Route::delete('/customer/{id}',[CustomerController::class,'deleteCustomer']);
+
+    // Employee
+    Route::post('/employee',[EmployeeController::class,'addEmployee']);
+    Route::get('/employee/{branch}',[EmployeeController::class,'getEmployees']);
+    Route::put('/employee/{id}',[EmployeeController::class,'updateEmployee']);
+    Route::delete('/employee/{id}',[EmployeeController::class,'deleteEmployee']);
 
     // General Provider
     Route::post('/provider',[GeneralServiceProviderController::class,'addProvider']);
