@@ -17,6 +17,7 @@ use App\Http\Controllers\SundryProductController;
 use App\Http\Controllers\SalonDateController;
 use App\Http\Controllers\CashierDepositController;
 use App\Http\Controllers\CashierWithdrawController;
+use App\Http\Controllers\AdvancePayController;
 
 /*
 |--------------------------------------------------------------------------
@@ -127,6 +128,12 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::get('/withdraw/{branch}',[CashierWithdrawController::class,'getCashierWithdraws']);
     Route::put('/withdraw/{id}',[CashierWithdrawController::class,'updateCashierWithdraw']);
     Route::delete('/withdraw/{id}',[CashierWithdrawController::class,'deleteCashierWithdraw']);
+
+    // Advance Pay
+    Route::post('/advance',[AdvancePayController::class,'addAdvancePay']);
+    Route::get('/advance/{branch}',[AdvancePayController::class,'getAdvancePays']);
+    Route::put('/advance/{id}',[AdvancePayController::class,'updateAdvancePay']);
+    Route::delete('/advance/{id}',[AdvancePayController::class,'deleteAdvancePay']);
     
 });
 
