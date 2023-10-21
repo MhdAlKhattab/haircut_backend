@@ -41,7 +41,7 @@ class AuthController extends Controller
         $user->first_name = $request['first_name'];
         $user->last_name = $request['last_name'];
         $user->phone_number = $request['phone_number'];
-        $user->password = $request['password'];
+        $user->password = Hash::make($request['password']);
 
         $user->save();
 
@@ -100,7 +100,7 @@ class AuthController extends Controller
         $user->first_name = $request['first_name'];
         $user->last_name = $request['last_name'];
         $user->phone_number = $request['phone_number'];
-        $user->password = $request['password'];
+        $user->password = Hash::make($request['password']);
         $user->role = 1;
 
         $user->save();
