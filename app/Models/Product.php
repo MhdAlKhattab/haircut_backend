@@ -31,11 +31,11 @@ class Product extends Model
 
     public function Orders(): BelongsToMany
     {
-        return $this->belongsToMany(Order::class, 'order_product', 'order_id', 'product_id')->withPivot('quantity');
+        return $this->belongsToMany(Order::class, 'order_product', 'product_id', 'order_id')->withPivot('quantity');
     }
 
     public function Purchases(): BelongsToMany
     {
-        return $this->belongsToMany(Purchase::class, 'purchase_product', 'purchase_id', 'product_id')->withPivot('quantity');
+        return $this->belongsToMany(Purchase::class, 'purchase_product', 'product_id', 'purchase_id')->withPivot('quantity');
     }
 }

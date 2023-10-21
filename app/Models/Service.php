@@ -30,11 +30,11 @@ class Service extends Model
 
     public function Reservations(): BelongsToMany
     {
-        return $this->belongsToMany(Reservation::class, 'reservation_service', 'reservation_id', 'service_id');
+        return $this->belongsToMany(Reservation::class, 'reservation_service', 'service_id', 'reservation_id');
     }
 
     public function Orders(): BelongsToMany
     {
-        return $this->belongsToMany(Order::class, 'order_service', 'order_id', 'service_id');
+        return $this->belongsToMany(Order::class, 'order_service', 'service_id', 'order_id');
     }
 }

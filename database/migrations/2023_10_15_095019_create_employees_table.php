@@ -26,8 +26,8 @@ return new class extends Migration
             $table->string('pay_type');
             $table->float('salary');
 
-            $table->float('income_limit')->nullable();
-            $table->float('commission')->nullable();
+            $table->float('income_limit')->default(-1);
+            $table->float('commission')->default(0);
 
             $table->float('residence_cost');
             $table->float('health_cost');

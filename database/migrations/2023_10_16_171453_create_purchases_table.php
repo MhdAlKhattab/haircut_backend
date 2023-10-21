@@ -17,8 +17,8 @@ return new class extends Migration
             $table->foreignId('supplier_id')->constrained('suppliers')->cascadeOnDelete();
 
             $table->float('amount');
-            $table->float('discount')->nullable();
-            $table->float('amount_after_discount')->nullable();
+            $table->float('discount')->default(0);
+            $table->float('amount_after_discount')->default(-1);
             $table->float('tax');
             $table->string('type');
 

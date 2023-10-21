@@ -19,13 +19,13 @@ return new class extends Migration
 
             $table->float('amount');
             $table->string('amount_pay_type');
-            $table->float('discount')->nullable();
-            $table->float('amount_after_discount')->nullable();
+            $table->float('discount')->default(0);
+            $table->float('amount_after_discount')->default(-1);
             $table->float('tax');
             $table->float('employee_commission');
-            $table->float('manager_commission')->nullable();
-            $table->float('representative_commission')->nullable();
-            $table->float('tip')->nullable();
+            $table->float('manager_commission')->default(0);
+            $table->float('representative_commission')->default(0);
+            $table->float('tip')->default(0);
             $table->string('tip_pay_type')->nullable();
 
             $table->timestamps();

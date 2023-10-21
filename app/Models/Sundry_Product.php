@@ -28,6 +28,6 @@ class Sundry_Product extends Model
 
     public function Purchases(): BelongsToMany
     {
-        return $this->belongsToMany(Purchase::class, 'purchase_sundry', 'purchase_id', 'sundry_id')->withPivot('quantity');
+        return $this->belongsToMany(Purchase::class, 'purchase_sundry', 'sundry_id', 'purchase_id')->withPivot('quantity');
     }
 }

@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('employee_id')->constrained('employees')->cascadeOnDelete();
 
-            $table->float('current_salary')->default(0.0);
-            $table->float('total_commission')->default(0.0);
-            $table->float('payed_commission')->default(0.0);
+            $table->float('current_salary')->default(0);
+            $table->float('total_commission')->default(0);
+            $table->float('payed_commission')->default(0);
 
             $table->timestamps();
         });
