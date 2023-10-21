@@ -18,6 +18,8 @@ class OrderController extends Controller
             'customer_id' => 'required|numeric|exists:customers,id',
             'products' => 'array|min:1',
             'products.*' => 'numeric|exists:products,id',
+            'products_count' => 'array|size:' . count($data['products']),
+            'products_count.*' => 'numeric|min:1',
             'services' => 'array|min:1',
             'services.*' => 'numeric|exists:services,id',
             'amount' => 'required|numeric',
@@ -42,7 +44,6 @@ class OrderController extends Controller
         $employee_commission = Employee::find($request['employee_id'])->commission;
         $manager_commission = 0;
         $representative_commission = 0;
-
 
         $order = new Order;
 
@@ -73,8 +74,15 @@ class OrderController extends Controller
 
         $order->save();
 
-        if ($request['products'])
-            $order->Products()->attach($request['products']);
+        if ($request['products']){
+            $productsWithPivot = [];
+
+            for ($i = 0; $i < count($request['products']); $i+=1) {
+                $productsWithPivot[$request['products'][$i]] = ['quantity' => $request['products_count'][$i]];
+            }
+
+            $order->Products()->attach($productsWithPivot);
+        }
         if ($request['services'])
             $order->Services()->attach($request['services']);
 
@@ -103,6 +111,8 @@ class OrderController extends Controller
                 'customer_id' => 'numeric|exists:customers,id',
                 'products' => 'array|min:1',
                 'products.*' => 'numeric|exists:products,id',
+                'products_count' => 'array|size:' . count($request['products']),
+                'products_count.*' => 'numeric|min:1',
                 'services' => 'array|min:1',
                 'services.*' => 'numeric|exists:services,id',
                 'amount' => 'numeric',
@@ -147,8 +157,15 @@ class OrderController extends Controller
         $order->manager_commission = ($amount_after_discount * $manager_commission) / 100.0;
         $order->representative_commission = ($amount_after_discount * $representative_commission) / 100.0;
 
-        if ($request['products'])
-            $order->Products()->sync($request['products']);
+        if ($request['products']){
+            $productsWithPivot = [];
+
+            for ($i = 0; $i < count($request['products']); $i+=1) {
+                $productsWithPivot[$request['products'][$i]] = ['quantity' => $request['products_count'][$i]];
+            }
+
+            $order->Products()->sync($productsWithPivot);
+        }
         if ($request['services'])
             $order->Services()->sync($request['services']);
         
