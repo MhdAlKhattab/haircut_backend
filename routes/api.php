@@ -18,6 +18,7 @@ use App\Http\Controllers\SalonDateController;
 use App\Http\Controllers\CashierDepositController;
 use App\Http\Controllers\CashierWithdrawController;
 use App\Http\Controllers\AdvancePayController;
+use App\Http\Controllers\RivalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -134,6 +135,12 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::get('/advance/{branch}',[AdvancePayController::class,'getAdvancePays']);
     Route::put('/advance/{id}',[AdvancePayController::class,'updateAdvancePay']);
     Route::delete('/advance/{id}',[AdvancePayController::class,'deleteAdvancePay']);
+
+    // Rival
+    Route::post('/rival',[RivalController::class,'addRival']);
+    Route::get('/rival/{branch}',[RivalController::class,'getRivals']);
+    Route::put('/rival/{id}',[RivalController::class,'updateRival']);
+    Route::delete('/rival/{id}',[RivalController::class,'deleteRival']);
     
 });
 
