@@ -38,32 +38,39 @@ class OrderController extends Controller
         // Initial
         $amount_after_discount = $request['amount'];
 
-        // Check If There Is A Discount
-        if ($request['discount']){
-            $discounted_amount = ($request['amount'] * $request['discount']) / 100.0;
-            $amount_after_discount = $request['amount'] - $discounted_amount;
-        }
-
         // Get User's Commission
         $employee_commission = Employee::find($request['employee_id'])->commission;
         $manager_commission = 0;
         $representative_commission = 0;
 
-        $order = Order::create([
-            'branch_id' => $request['branch_id'],
-            'employee_id' => $request['employee_id'],
-            'customer_id' => $request['customer_id'],
-            'amount' => $request['amount'],
-            'amount_pay_type' => $request['amount_pay_type'],
-            'discount' => $request['discount'],
-            'amount_after_discount' => $amount_after_discount,
-            'tip' => $request['tip'],
-            'tip_pay_type' => $request['tip_pay_type'],
-            'tax' => ($amount_after_discount * 15) / 100.0,
-            'employee_commission' => ($amount_after_discount * $employee_commission) / 100.0,
-            'manager_commission' => ($amount_after_discount * $manager_commission) / 100.0,
-            'representative_commission' => ($amount_after_discount * $representative_commission) / 100.0,
-        ]);
+
+        $order = new Order;
+
+        $order->branch_id = $request['branch_id'];
+        $order->employee_id = $request['employee_id'];
+        $order->customer_id = $request['customer_id'];
+        $order->amount = $request['amount'];
+        $order->amount_pay_type = $request['amount_pay_type'];
+
+        if ($request['discount']){
+            $order->discount = $request['discount'];
+
+            $discounted_amount = ($request['amount'] * $request['discount']) / 100.0;
+            $amount_after_discount = $request['amount'] - $discounted_amount;
+        }
+
+        $order->amount_after_discount = $amount_after_discount;
+
+        if ($request['tip']){
+            $order->tip = $request['tip'];
+            $order->tip_pay_type = $request['tip_pay_type'];
+        }
+
+        $order->tax = ($amount_after_discount * 15) / 100.0;
+        $order->employee_commission = ($amount_after_discount * $employee_commission) / 100.0;
+        $order->manager_commission = ($amount_after_discount * $manager_commission) / 100.0;
+        $order->representative_commission = ($amount_after_discount * $representative_commission) / 100.0;
+
         $order->save();
 
         if ($request['products'])
@@ -110,19 +117,19 @@ class OrderController extends Controller
             return response()->json(["errors"=>$validatedData->errors()], 400);
         }
 
-        if($request['employee_id'] != null)
+        if($request['employee_id'])
             $order->employee_id = $request['employee_id'];
-        if($request['customer_id'] != null)
+        if($request['customer_id'])
             $order->customer_id = $request['customer_id'];
-        if($request['amount'] != null)
+        if($request['amount'])
             $order->amount = $request['amount'];
-        if($request['amount_pay_type'] != null)
+        if($request['amount_pay_type'])
             $order->amount_pay_type = $request['amount_pay_type'];
-        if($request['discount'] != null)
+        if($request['discount'])
             $order->discount = $request['discount'];
-        if($request['tip'] != null)
+        if($request['tip'])
             $order->tip = $request['tip'];
-        if($request['tip_pay_type'] != null)
+        if($request['tip_pay_type'])
             $order->tip_pay_type = $request['tip_pay_type'];
 
         // Get Discounted Amount

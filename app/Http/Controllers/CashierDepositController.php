@@ -25,11 +25,12 @@ class CashierDepositController extends Controller
             return response()->json(['errors'=>$validatedData->errors()], 400);
         }
 
-        $deposit = Cashier_Deposit::create([
-            'branch_id' => $request['branch_id'],
-            'amount' => $request['amount'],
-            'statement' => $request['statement'],
-        ]);
+        $deposit = new Cashier_Deposit;
+
+        $deposit->branch_id = $request['branch_id'];
+        $deposit->amount = $request['amount'];
+        $deposit->statement = $request['statement'];
+
         $deposit->save();
 
         return response()->json(['data' => $deposit], 200);
@@ -61,9 +62,9 @@ class CashierDepositController extends Controller
             return response()->json(["errors"=>$validatedData->errors()], 400);
         }
 
-        if($request['amount'] != null)
+        if($request['amount'])
             $deposit->amount = $request['amount'];
-        if($request['statement'] != null)
+        if($request['statement'])
             $deposit->statement = $request['statement'];
         
         $deposit->save();

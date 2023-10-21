@@ -28,14 +28,15 @@ class ProductController extends Controller
             return response()->json(['errors'=>$validatedData->errors()], 400);
         }
 
-        $product = Product::create([
-            'branch_id' => $request['branch_id'],
-            'name' => $request['name'],
-            'purchasing_price' => $request['purchasing_price'],
-            'selling_price' => $request['selling_price'], 
-            'quantity' => $request['quantity'],
-            'image' => '',
-        ]);
+        $product = new Product;
+
+        $product->branch_id = $request['branch_id'];
+        $product->name = $request['name'];
+        $product->purchasing_price = $request['purchasing_price'];
+        $product->selling_price = $request['selling_price'];
+
+        if ($request['quantity'])
+            $product->quantity = $request['quantity'];
 
         if ($request->hasFile('image')) {
 
@@ -57,6 +58,7 @@ class ProductController extends Controller
             $product->image = $filenameToStore;
 
         }
+
         $product->save();
 
         return response()->json(['data' => $product], 200);
@@ -91,13 +93,13 @@ class ProductController extends Controller
             return response()->json(["errors"=>$validatedData->errors()], 400);
         }
 
-        if($request['name'] != null)
+        if($request['name'])
             $product->name = $request['name'];
-        if($request['purchasing_price'] != null)
+        if($request['purchasing_price'])
             $product->purchasing_price = $request['purchasing_price'];
-        if($request['selling_price'] != null)
+        if($request['selling_price'])
             $product->selling_price = $request['selling_price'];
-        if($request['quantity'] != null)
+        if($request['quantity'])
             $product->quantity = $request['quantity'];
         if ($request->hasFile('image')) {
 
@@ -119,6 +121,7 @@ class ProductController extends Controller
             $product->image = $filenameToStore;
     
         }
+        
         $product->save();
 
         return response()->json(['data' => $product], 200);

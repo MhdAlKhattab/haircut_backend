@@ -26,12 +26,13 @@ class SalonDateController extends Controller
             return response()->json(['errors'=>$validatedData->errors()], 400);
         }
 
-        $date = Salon_Date::create([
-            'branch_id' => $request['branch_id'],
-            'day' => $request['day'],
-            'start_time' => $request['start_time'],
-            'end_time' => $request['end_time'], 
-        ]);
+        $date = new Salon_Date;
+
+        $date->branch_id = $request['branch_id'];
+        $date->day = $request['day'];
+        $date->start_time = $request['start_time'];
+        $date->end_time = $request['end_time'];
+
         $date->save();
 
         return response()->json(['data' => $date], 200);
@@ -64,11 +65,11 @@ class SalonDateController extends Controller
             return response()->json(["errors"=>$validatedData->errors()], 400);
         }
 
-        if($request['day'] != null)
+        if($request['day'])
             $date->day = $request['day'];
-        if($request['start_time'] != null)
+        if($request['start_time'])
             $date->start_time = $request['start_time'];
-        if($request['end_time'] != null)
+        if($request['end_time'])
             $date->end_time = $request['end_time'];
 
         $date->save();

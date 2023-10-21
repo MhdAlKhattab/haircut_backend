@@ -25,11 +25,12 @@ class SundryProductController extends Controller
             return response()->json(['errors'=>$validatedData->errors()], 400);
         }
 
-        $sundry_product = Sundry_Product::create([
-            'branch_id' => $request['branch_id'],
-            'name' => $request['name'],
-            'price' => $request['price'],
-        ]);
+        $sundry_product = new Sundry_Product;
+
+        $sundry_product->branch_id = $request['branch_id'];
+        $sundry_product->name = $request['name'];
+        $sundry_product->price = $request['price'];
+
         $sundry_product->save();
 
         return response()->json(['data' => $sundry_product], 200);
@@ -61,9 +62,9 @@ class SundryProductController extends Controller
             return response()->json(["errors"=>$validatedData->errors()], 400);
         }
 
-        if($request['name'] != null)
+        if($request['name'])
             $sundry_product->name = $request['name'];
-        if($request['price'] != null)
+        if($request['price'])
             $sundry_product->price = $request['price'];
         
         $sundry_product->save();

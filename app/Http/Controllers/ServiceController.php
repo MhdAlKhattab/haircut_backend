@@ -27,13 +27,14 @@ class ServiceController extends Controller
             return response()->json(['errors'=>$validatedData->errors()], 400);
         }
 
-        $service = Service::create([
-            'branch_id' => $request['branch_id'],
-            'name' => $request['name'],
-            'price' => $request['price'],
-            'image' => $request['price'],
-            'duration' => $request['duration'],
-        ]);
+        $service = new Service;
+
+        $service->branch_id = $request['branch_id'];
+        $service->name = $request['name'];
+        $service->price = $request['price'];
+        $service->image = $request['image'];
+        $service->duration = $request['duration'];
+
         $service->save();
 
         return response()->json(['data' => $service], 200);
@@ -67,13 +68,13 @@ class ServiceController extends Controller
             return response()->json(["errors"=>$validatedData->errors()], 400);
         }
 
-        if($request['name'] != null)
+        if($request['name'])
             $service->name = $request['name'];
-        if($request['price'] != null)
+        if($request['price'])
             $service->price = $request['price'];
-        if($request['image'] != null)
+        if($request['image'])
             $service->image = $request['image'];
-        if($request['duration'] != null)
+        if($request['duration'])
             $service->duration = $request['duration'];
 
         $service->save();

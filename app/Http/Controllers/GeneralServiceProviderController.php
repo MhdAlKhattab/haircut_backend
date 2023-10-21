@@ -26,12 +26,13 @@ class GeneralServiceProviderController extends Controller
             return response()->json(['errors'=>$validatedData->errors()], 400);
         }
 
-        $provider = General_Service_Provider::create([
-            'branch_id' => $request['branch_id'],
-            'name' => $request['name'],
-            'tax_state' => $request['tax_state'],
-            'tax_number' => $request['tax_number'], 
-        ]);
+        $provider = new General_Service_Provider;
+
+        $provider->branch_id = $request['branch_id'];
+        $provider->name = $request['name'];
+        $provider->tax_state = $request['tax_state'];
+        $provider->tax_number = $request['tax_number'];
+
         $provider->save();
 
         return response()->json(['data' => $provider], 200);
@@ -64,11 +65,11 @@ class GeneralServiceProviderController extends Controller
             return response()->json(["errors"=>$validatedData->errors()], 400);
         }
 
-        if($request['name'] != null)
+        if($request['name'])
             $provider->name = $request['name'];
-        if($request['tax_state'] != null)
+        if($request['tax_state'])
             $provider->tax_state = $request['tax_state'];
-        if($request['tax_number'] != null)
+        if($request['tax_number'])
             $provider->tax_number = $request['tax_number'];
 
         $provider->save();

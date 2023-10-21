@@ -27,10 +27,11 @@ class BranchController extends Controller
             return response()->json(['errors'=>$validatedData->errors()], 400);
         }
 
-        $branch = Branch::create([
-            'user_id' => Auth::user()->id,
-            'branch_name' => $request['branch_name'],
-        ]);
+        $branch = new Branch;
+
+        $branch->user_id = Auth::user()->id;
+        $branch->branch_name = $request['branch_name'];
+        
         $branch->save();
 
         return response()->json(['data' => $branch], 200);

@@ -25,11 +25,12 @@ class GeneralServiceTermController extends Controller
             return response()->json(['errors'=>$validatedData->errors()], 400);
         }
 
-        $term = General_Service_Term::create([
-            'branch_id' => $request['branch_id'],
-            'name' => $request['name'],
-            'tax_state' => $request['tax_state'],
-        ]);
+        $term = new General_Service_Term;
+
+        $term->branch_id = $request['branch_id'];
+        $term->name = $request['name'];
+        $term->tax_state = $request['tax_state'];
+
         $term->save();
 
         return response()->json(['data' => $term], 200);
@@ -61,9 +62,9 @@ class GeneralServiceTermController extends Controller
             return response()->json(["errors"=>$validatedData->errors()], 400);
         }
 
-        if($request['name'] != null)
+        if($request['name'])
             $term->name = $request['name'];
-        if($request['tax_state'] != null)
+        if($request['tax_state'])
             $term->tax_state = $request['tax_state'];
 
         $term->save();

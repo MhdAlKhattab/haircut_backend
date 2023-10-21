@@ -25,11 +25,12 @@ class SupplierController extends Controller
             return response()->json(['errors'=>$validatedData->errors()], 400);
         }
 
-        $supplier = Supplier::create([
-            'branch_id' => $request['branch_id'],
-            'name' => $request['name'],
-            'tax_number' => $request['tax_number'], 
-        ]);
+        $supplier = new Supplier;
+
+        $supplier->branch_id = $request['branch_id'];
+        $supplier->name = $request['name'];
+        $supplier->tax_number = $request['tax_number'];
+
         $supplier->save();
 
         return response()->json(['data' => $supplier], 200);
@@ -61,9 +62,9 @@ class SupplierController extends Controller
             return response()->json(["errors"=>$validatedData->errors()], 400);
         }
 
-        if($request['name'] != null)
+        if($request['name'])
             $supplier->name = $request['name'];
-        if($request['tax_number'] != null)
+        if($request['tax_number'])
             $supplier->tax_number = $request['tax_number'];
 
         $supplier->save();

@@ -35,13 +35,13 @@ class UserController extends Controller
             return response()->json(["errors"=>$validatedData->errors()], 400);
         }
 
-        if($request['first_name'] != null)
+        if($request['first_name'])
             $user->first_name = $request['first_name'];
-        if($request['last_name'] != null)
+        if($request['last_name'])
             $user->last_name = $request['last_name'];
-        if($request['phone_number'] != null)
+        if($request['phone_number'])
             $user->phone_number = $request['phone_number'];
-        if($request['password'] != null)
+        if($request['password'])
             $user->password = Hash::make($request['password']);
 
         $user->save();

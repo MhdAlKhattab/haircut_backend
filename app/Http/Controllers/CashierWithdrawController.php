@@ -25,11 +25,12 @@ class CashierWithdrawController extends Controller
             return response()->json(['errors'=>$validatedData->errors()], 400);
         }
 
-        $withdraw = Cashier_Withdraw::create([
-            'branch_id' => $request['branch_id'],
-            'amount' => $request['amount'],
-            'statement' => $request['statement'],
-        ]);
+        $withdraw = new Cashier_Withdraw;
+
+        $withdraw->branch_id = $request['branch_id'];
+        $withdraw->amount = $request['amount'];
+        $withdraw->statement = $request['statement'];
+
         $withdraw->save();
 
         return response()->json(['data' => $withdraw], 200);
@@ -61,9 +62,9 @@ class CashierWithdrawController extends Controller
             return response()->json(["errors"=>$validatedData->errors()], 400);
         }
 
-        if($request['amount'] != null)
+        if($request['amount'])
             $withdraw->amount = $request['amount'];
-        if($request['statement'] != null)
+        if($request['statement'])
             $withdraw->statement = $request['statement'];
         
         $withdraw->save();

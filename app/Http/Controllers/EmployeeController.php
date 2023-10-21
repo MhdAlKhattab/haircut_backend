@@ -38,23 +38,26 @@ class EmployeeController extends Controller
             return response()->json(['errors'=>$validatedData->errors()], 400);
         }
 
-        $employee = Employee::create([
-            'branch_id' => $request['branch_id'],
-            'name' => $request['name'],
-            'residence_number' => $request['residence_number'], 
-            'residence_expire_date' => $request['residence_expire_date'],
-            'health_number' => $request['health_number'],
-            'health_expire_date' => $request['health_expire_date'], 
-            'job' => $request['job'],
-            'pay_type' => $request['pay_type'],
-            'salary' => $request['salary'], 
-            'income_limit' => $request['income_limit'],
-            'commission' => $request['commission'],
-            'residence_cost' => $request['residence_cost'], 
-            'health_cost' => $request['health_cost'],
-            'insurance_cost' => $request['insurance_cost'],
-            'costs_responsible' => $request['costs_responsible'], 
-        ]);
+        $employee = new Employee;
+        
+        $employee->branch_id = $request['branch_id'];
+        $employee->name = $request['name'];
+        $employee->residence_number = $request['residence_number'];
+        $employee->residence_expire_date = $request['residence_expire_date'];
+        $employee->health_number = $request['health_number'];
+        $employee->health_expire_date = $request['health_expire_date'];
+        $employee->job = $request['job'];
+        $employee->pay_type = $request['pay_type'];
+        $employee->salary = $request['salary'];
+        if ($request['income_limit'])
+            $employee->income_limit = $request['income_limit'];
+        if ($request['commission'])
+            $employee->commission = $request['commission'];
+        $employee->residence_cost = $request['residence_cost'];
+        $employee->health_cost = $request['health_cost'];
+        $employee->insurance_cost = $request['insurance_cost'];
+        $employee->costs_responsible = $request['costs_responsible'];
+
         $employee->save();
 
         $employee_info = Employee_Info::create([
@@ -106,35 +109,35 @@ class EmployeeController extends Controller
             return response()->json(["errors"=>$validatedData->errors()], 400);
         }
 
-        if($request['name'] != null)
+        if($request['name'])
             $employee->name = $request['name'];
-        if($request['residence_number'] != null)
+        if($request['residence_number'])
             $employee->residence_number = $request['residence_number'];
-        if($request['residence_expire_date'] != null)
+        if($request['residence_expire_date'])
             $employee->residence_expire_date = $request['residence_expire_date'];
-        if($request['health_number'] != null)
+        if($request['health_number'])
             $employee->health_number = $request['health_number'];
-        if($request['health_expire_date'] != null)
+        if($request['health_expire_date'])
             $employee->health_expire_date = $request['health_expire_date'];
-        if($request['job'] != null)
+        if($request['job'])
             $employee->job = $request['job'];
-        if($request['pay_type'] != null)
+        if($request['pay_type'])
             $employee->pay_type = $request['pay_type'];
-        if($request['salary'] != null)
+        if($request['salary'])
             $employee->salary = $request['salary'];
-        if($request['income_limit'] != null)
+        if($request['income_limit'])
             $employee->income_limit = $request['income_limit'];
-        if($request['commission'] != null)
+        if($request['commission'])
             $employee->commission = $request['commission'];
-        if($request['residence_cost'] != null)
+        if($request['residence_cost'])
             $employee->residence_cost = $request['residence_cost'];
-        if($request['health_cost'] != null)
+        if($request['health_cost'])
             $employee->health_cost = $request['health_cost'];
-        if($request['insurance_cost'] != null)
+        if($request['insurance_cost'])
             $employee->insurance_cost = $request['insurance_cost'];
-        if($request['costs_responsible'] != null)
+        if($request['costs_responsible'])
             $employee->costs_responsible = $request['costs_responsible'];
-        if($request['state'] != null)
+        if($request['state'])
             $employee->state = $request['state'];
 
         $employee->save();

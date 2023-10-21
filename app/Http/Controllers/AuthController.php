@@ -33,13 +33,16 @@ class AuthController extends Controller
             return response()->json(['errors'=>$validatedData->errors()], 400);
         }
 
-        $user = User::create([
-            'branch_id' => $request['branch_id'],
-            'first_name' => $request['first_name'],
-            'last_name' => $request['last_name'],
-            'phone_number' => $request['phone_number'],
-            'password' => Hash::make($request['password']),
-        ]);
+        $user = new User;
+
+        if ($request['branch_id'])
+            $user->branch_id = $request['branch_id'];
+
+        $user->first_name = $request['first_name'];
+        $user->last_name = $request['last_name'];
+        $user->phone_number = $request['phone_number'];
+        $user->password = $request['password'];
+
         $user->save();
 
         return response()->json(['data' => $user], 200);
@@ -71,13 +74,13 @@ class AuthController extends Controller
             return response()->json(["errors"=>$validatedData->errors()], 400);
         }
 
-        if($request['first_name'] != null)
+        if($request['first_name'])
             $user->first_name = $request['first_name'];
-        if($request['last_name'] != null)
+        if($request['last_name'])
             $user->last_name = $request['last_name'];
-        if($request['phone_number'] != null)
+        if($request['phone_number'])
             $user->phone_number = $request['phone_number'];
-        if($request['password'] != null)
+        if($request['password'])
             $user->password = Hash::make($request['password']);
 
         $user->save();
@@ -92,13 +95,14 @@ class AuthController extends Controller
             return response()->json(['errors'=>$validatedData->errors()], 400);
         }
 
-        $user = User::create([
-            'first_name' => $request['first_name'],
-            'last_name' => $request['last_name'],
-            'phone_number' => $request['phone_number'],
-            'password' => Hash::make($request['password']),
-            'role' => 1,
-        ]);
+        $user = new User;
+
+        $user->first_name = $request['first_name'];
+        $user->last_name = $request['last_name'];
+        $user->phone_number = $request['phone_number'];
+        $user->password = $request['password'];
+        $user->role = 1;
+
         $user->save();
 
         return response()->json(['data' => $user], 200);

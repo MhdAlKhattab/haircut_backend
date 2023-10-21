@@ -26,11 +26,12 @@ class CustomerController extends Controller
             return response()->json(['errors'=>$validatedData->errors()], 400);
         }
 
-        $customer = Customer::create([
-            'branch_id' => $request['branch_id'],
-            'name' => $request['name'],
-            'phone_number' => $request['phone_number'], 
-        ]);
+        $customer = new Customer;
+        
+        $customer->branch_id = $request['branch_id'];
+        $customer->name = $request['name'];
+        $customer->phone_number = $request['phone_number'];
+
         $customer->save();
 
         return response()->json(['data' => $customer], 200);
@@ -62,9 +63,9 @@ class CustomerController extends Controller
             return response()->json(["errors"=>$validatedData->errors()], 400);
         }
 
-        if($request['name'] != null)
+        if($request['name'])
             $customer->name = $request['name'];
-        if($request['phone_number'] != null)
+        if($request['phone_number'])
             $customer->phone_number = $request['phone_number'];
 
         $customer->save();
