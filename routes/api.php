@@ -10,6 +10,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\GeneralServiceProviderController;
 use App\Http\Controllers\GeneralServiceTermController;
+use App\Http\Controllers\GeneralServiceController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SupplierController;
@@ -87,6 +88,12 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::get('/term/{branch}',[GeneralServiceTermController::class,'getTerms']);
     Route::put('/term/{id}',[GeneralServiceTermController::class,'updateTerm']);
     Route::delete('/term/{id}',[GeneralServiceTermController::class,'deleteTerm']);
+
+    // General Service
+    Route::post('/general-service',[GeneralServiceController::class,'addService']);
+    Route::get('/general-service/{branch}',[GeneralServiceController::class,'getServices']);
+    Route::put('/general-service/{id}',[GeneralServiceController::class,'updateService']);
+    Route::delete('/general-service/{id}',[GeneralServiceController::class,'deleteService']);
 
     // Product
     Route::post('/product',[ProductController::class,'addProduct']);
