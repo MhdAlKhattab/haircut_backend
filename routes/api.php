@@ -8,6 +8,7 @@ use App\Http\Controllers\BranchController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\GeneralServiceProviderController;
 use App\Http\Controllers\GeneralServiceTermController;
 use App\Http\Controllers\GeneralServiceController;
@@ -76,6 +77,12 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::get('/order/{branch}',[OrderController::class,'getOrders']);
     Route::put('/order/{id}',[OrderController::class,'updateOrder']);
     Route::delete('/order/{id}',[OrderController::class,'deleteOrder']);
+
+    // Reservation
+    Route::post('/reservation',[ReservationController::class,'addReservation']);
+    Route::get('/reservation/{branch}',[ReservationController::class,'getReservations']);
+    Route::put('/reservation/{id}',[ReservationController::class,'updateReservation']);
+    Route::delete('/reservation/{id}',[ReservationController::class,'deleteReservation']);
 
     // General Provider
     Route::post('/provider',[GeneralServiceProviderController::class,'addProvider']);

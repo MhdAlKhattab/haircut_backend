@@ -87,7 +87,9 @@ class OrderController extends Controller
             $order->Services()->attach($request['services']);
 
         return response()->json(['data' => $order,
-         'products' => $request['products'], 'services' => $request['services']], 200);
+                                'products' => $request['products'],
+                                'products_count' => $request['products_count'],
+                                'services' => $request['services']], 200);
     }
 
     public function getOrders($branch_id)
@@ -172,7 +174,9 @@ class OrderController extends Controller
         $order->save();
 
         return response()->json(['data' => $order,
-        'products' => $request['products'], 'services' => $request['services']], 200);
+                                'products' => $request['products'],
+                                'products_count' => $request['products_count'],
+                                'services' => $request['services']], 200);
     }
 
     public function deleteOrder($id)
