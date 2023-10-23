@@ -18,7 +18,7 @@ class OrderController extends Controller
             'customer_id' => 'required|numeric|exists:customers,id',
             'products' => 'array|min:1',
             'products.*' => 'numeric|exists:products,id',
-            'products_count' => 'array|size:' . count($data['products']),
+            'products_count' => 'array',
             'products_count.*' => 'numeric|min:1',
             'services' => 'array|min:1',
             'services.*' => 'numeric|exists:services,id',
@@ -36,6 +36,13 @@ class OrderController extends Controller
         if ($validatedData->fails())  {
             return response()->json(['errors'=>$validatedData->errors()], 400);
         }
+
+        if (!$request['products'] and !$request['services'])
+            return response()->json(['errors' => 'You must send products or services !'], 400);
+        if ($request['products'] and !$request['products_count']) 
+            return response()->json(['errors' => 'There are no products count!'], 400);
+        if ($request['products'] and count($request['products_count']) != count($request['products'])) 
+            return response()->json(['errors' => 'The size of count array does not equal product array!'], 400);
 
         // Initial
         $amount_after_discount = $request['amount'];
@@ -113,7 +120,7 @@ class OrderController extends Controller
                 'customer_id' => 'numeric|exists:customers,id',
                 'products' => 'array|min:1',
                 'products.*' => 'numeric|exists:products,id',
-                'products_count' => 'array|size:' . count($request['products']),
+                'products_count' => 'array',
                 'products_count.*' => 'numeric|min:1',
                 'services' => 'array|min:1',
                 'services.*' => 'numeric|exists:services,id',
@@ -128,6 +135,11 @@ class OrderController extends Controller
         if($validatedData->fails()){
             return response()->json(["errors"=>$validatedData->errors()], 400);
         }
+
+        if ($request['products'] and !$request['products_count']) 
+            return response()->json(['errors' => 'There are no products count!'], 400);
+        if ($request['products'] and count($request['products_count']) != count($request['products'])) 
+            return response()->json(['errors' => 'The size of count array does not equal product array!'], 400);
 
         if($request['employee_id'])
             $order->employee_id = $request['employee_id'];
@@ -159,6 +171,8 @@ class OrderController extends Controller
         $order->manager_commission = ($amount_after_discount * $manager_commission) / 100.0;
         $order->representative_commission = ($amount_after_discount * $representative_commission) / 100.0;
 
+        $order->save();
+
         if ($request['products']){
             $productsWithPivot = [];
 
@@ -171,8 +185,6 @@ class OrderController extends Controller
         if ($request['services'])
             $order->Services()->sync($request['services']);
         
-        $order->save();
-
         return response()->json(['data' => $order,
                                 'products' => $request['products'],
                                 'products_count' => $request['products_count'],

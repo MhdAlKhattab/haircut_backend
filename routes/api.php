@@ -21,6 +21,7 @@ use App\Http\Controllers\CashierDepositController;
 use App\Http\Controllers\CashierWithdrawController;
 use App\Http\Controllers\AdvancePayController;
 use App\Http\Controllers\RivalController;
+use App\Http\Controllers\PurchaseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -77,6 +78,12 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::get('/order/{branch}',[OrderController::class,'getOrders']);
     Route::put('/order/{id}',[OrderController::class,'updateOrder']);
     Route::delete('/order/{id}',[OrderController::class,'deleteOrder']);
+
+    // Purchase
+    Route::post('/purchase',[PurchaseController::class,'addPurchase']);
+    Route::get('/purchase/{branch}',[PurchaseController::class,'getPurchases']);
+    Route::put('/purchase/{id}',[PurchaseController::class,'updatePurchase']);
+    Route::delete('/purchase/{id}',[PurchaseController::class,'deletePurchase']);
 
     // Reservation
     Route::post('/reservation',[ReservationController::class,'addReservation']);

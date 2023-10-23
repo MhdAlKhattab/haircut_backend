@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Reservation;
-use App\Models\Employee;
 use App\Models\Branch;
 
 class ReservationController extends Controller
@@ -90,11 +89,11 @@ class ReservationController extends Controller
         if($request['total_amount'])
             $reservation->total_amount = $request['total_amount'];
 
+        $reservation->save();
+
         if ($request['services'])
             $reservation->Services()->sync($request['services']);
         
-        $reservation->save();
-
         return response()->json(['data' => $reservation,
                                 'services' => $request['services']], 200);
     }
