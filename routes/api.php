@@ -9,6 +9,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\StopedReservationController;
 use App\Http\Controllers\GeneralServiceProviderController;
 use App\Http\Controllers\GeneralServiceTermController;
 use App\Http\Controllers\GeneralServiceController;
@@ -90,6 +91,12 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::get('/reservation/{branch}',[ReservationController::class,'getReservations']);
     Route::put('/reservation/{id}',[ReservationController::class,'updateReservation']);
     Route::delete('/reservation/{id}',[ReservationController::class,'deleteReservation']);
+
+    // Stoped Reservation
+    Route::post('/stoped-reservation',[StopedReservationController::class,'addStopedReservation']);
+    Route::get('/stoped-reservation/{branch}',[StopedReservationController::class,'getStopedReservations']);
+    Route::put('/stoped-reservation/{id}',[StopedReservationController::class,'updateStopedReservation']);
+    Route::delete('/stoped-reservation/{id}',[StopedReservationController::class,'deleteStopedReservation']);
 
     // General Provider
     Route::post('/provider',[GeneralServiceProviderController::class,'addProvider']);

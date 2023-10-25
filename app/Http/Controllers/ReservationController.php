@@ -49,9 +49,15 @@ class ReservationController extends Controller
 
     public function getReservations($branch_id)
     {
-        $branch = Branch::find($branch_id);
+        $reservations = Reservation::where('branch_id', '=', $branch_id)
+                        ->with(['Employee:id,name',
+                                'Customer:id,name,phone_number',
+                                'services:id,name'])
+                        ->select('id', 'branch_id', 'employee_id', 'customer_id',
+                                 'date', 'total_duration', 'total_amount')
+                        ->get();
 
-        return response()->json($branch->Reservations, 200);
+        return response()->json($reservations, 200);
     }
 
     public function updateReservation(Request $request, $id)
