@@ -25,13 +25,19 @@ class CashierDepositController extends Controller
             return response()->json(['errors'=>$validatedData->errors()], 400);
         }
 
+        $branch = Branch::find($request['branch_id'])->first();
+
         $deposit = new Cashier_Deposit;
 
         $deposit->branch_id = $request['branch_id'];
         $deposit->amount = $request['amount'];
         $deposit->statement = $request['statement'];
-
+        $deposit->opening_balance = $branch->balance;
+        $deposit->closing_balance = $branch->balance + $request['amount'];
         $deposit->save();
+
+        $branch->balance += $request['amount'];
+        $branch->save();
 
         return response()->json(['data' => $deposit], 200);
     }
@@ -62,8 +68,15 @@ class CashierDepositController extends Controller
             return response()->json(["errors"=>$validatedData->errors()], 400);
         }
 
-        if($request['amount'])
+        if($request['amount']){
+            $branch = Branch::find($deposit->branch_id)->first();
+            $branch->balance -= $deposit->amount;
+            $branch->balance += $request['amount'];
+            $branch->save();
+
             $deposit->amount = $request['amount'];
+            $deposit->closing_balance = $deposit->opening_balance + $request['amount'];
+        }
         if($request['statement'])
             $deposit->statement = $request['statement'];
         

@@ -25,13 +25,22 @@ class CashierWithdrawController extends Controller
             return response()->json(['errors'=>$validatedData->errors()], 400);
         }
 
+        $branch = Branch::find($request['branch_id'])->first();
+
+        if ($branch->balance < $request['amount'])
+            return response()->json(['errors' => "There is no enough money in the cashier"], 400);
+
         $withdraw = new Cashier_Withdraw;
 
         $withdraw->branch_id = $request['branch_id'];
         $withdraw->amount = $request['amount'];
         $withdraw->statement = $request['statement'];
-
+        $withdraw->opening_balance = $branch->balance;
+        $withdraw->closing_balance = $branch->balance - $request['amount'];
         $withdraw->save();
+
+        $branch->balance -= $request['amount'];
+        $branch->save();
 
         return response()->json(['data' => $withdraw], 200);
     }
@@ -62,8 +71,18 @@ class CashierWithdrawController extends Controller
             return response()->json(["errors"=>$validatedData->errors()], 400);
         }
 
-        if($request['amount'])
+        if($request['amount']){
+            if ($withdraw->opening_balance < $request['amount'])
+                return response()->json(['errors' => "There was no enough money in the cashier"], 400);
+            
+            $branch = Branch::find($withdraw->branch_id)->first();
+            $branch->balance += $withdraw->amount;
+            $branch->balance -= $request['amount'];
+            $branch->save();
+
             $withdraw->amount = $request['amount'];
+            $withdraw->closing_balance = $withdraw->opening_balance - $request['amount'];
+        }
         if($request['statement'])
             $withdraw->statement = $request['statement'];
         

@@ -17,6 +17,8 @@ return new class extends Migration
 
             $table->float('amount');
             $table->string('statement');
+            $table->float('opening_balance');
+            $table->float('closing_balance');
             
             $table->timestamps();
         });

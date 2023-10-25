@@ -18,6 +18,8 @@ class Cashier_Deposit extends Model
         'branch_id',
         'amount',
         'statement',
+        'opening_balance',
+        'closing_balance',
     ];
 
     public function Branch(): BelongsTo

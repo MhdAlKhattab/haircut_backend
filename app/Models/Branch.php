@@ -18,6 +18,7 @@ class Branch extends Model
     protected $fillable = [
         'user_id',
         'branch_name',
+        'balance',
     ];
 
     public function Manager(): BelongsTo

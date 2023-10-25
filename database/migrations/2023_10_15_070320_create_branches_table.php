@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('branches', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+
             $table->string('branch_name');
+            $table->float('balance')->default(0);
 
             $table->timestamps();
         });
