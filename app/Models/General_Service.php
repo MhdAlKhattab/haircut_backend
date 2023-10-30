@@ -29,11 +29,11 @@ class General_Service extends Model
 
     public function General_Service_Provider(): BelongsTo
     {
-        return $this->belongsTo(General_Service_Provider::class);
+        return $this->belongsTo(General_Service_Provider::class, 'provider_id');
     }
 
     public function General_Service_Term(): BelongsTo
     {
-        return $this->belongsTo(General_Service_Term::class);
+        return $this->belongsTo(General_Service_Term::class, 'term_id');
     }
 }

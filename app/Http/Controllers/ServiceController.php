@@ -47,6 +47,19 @@ class ServiceController extends Controller
         return response()->json($branch->Services, 200);
     }
 
+    public function getServicesFrequency($branch_id)
+    {
+        $services = Service::where('branch_id', '=', $branch_id)
+                            ->withCount('orders')
+                            ->get();
+
+        foreach ($services as $service) {
+            $service->total_revenue = $service->price * $service->orders_count;
+        }
+
+        return response()->json($services, 200);
+    }
+
     public function updateService(Request $request, $id)
     {
         $service = Service::find($id);

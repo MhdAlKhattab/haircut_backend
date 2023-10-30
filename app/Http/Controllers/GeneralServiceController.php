@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\General_Service;
+use App\Models\General_Service_Provider;
+use App\Models\General_Service_Term;
 use App\Models\Branch;
 
 class GeneralServiceController extends Controller
@@ -27,6 +29,16 @@ class GeneralServiceController extends Controller
             return response()->json(['errors'=>$validatedData->errors()], 400);
         }
 
+        $provider_state = General_Service_Provider::find($request['provider_id'])->tax_state;
+        $term_state = General_Service_Term::find($request['term_id'])->tax_state;
+
+        if ($provider_state != $request['tax_state'] and $term_state != $request['tax_state'])
+            return response()->json(['errors' => 'The provider state, term state and service state must be the same !'], 400);
+        if ($provider_state != $request['tax_state'])
+            return response()->json(['errors' => 'The provider state and service state must be the same !'], 400);
+        if ($term_state != $request['tax_state'])
+            return response()->json(['errors' => 'The term state and service state must be the same !'], 400);
+
         $service = new General_Service;
 
         $service->branch_id = $request['branch_id'];
@@ -45,6 +57,32 @@ class GeneralServiceController extends Controller
         $branch = Branch::find($branch_id);
 
         return response()->json($branch->General_Services, 200);
+    }
+
+    public function getUntaxedServices($branch_id)
+    {
+        $services = General_Service::where([
+            ['branch_id', '=', $branch_id],
+            ['tax_state', '=', 0]
+        ])->with([
+            'General_Service_Provider:id,name',
+            'General_Service_Term:id,name',
+        ])->get();
+
+        return response()->json($services, 200);
+    }
+
+    public function gettaxedServices($branch_id)
+    {
+        $services = General_Service::where([
+            ['branch_id', '=', $branch_id],
+            ['tax_state', '=', 1]
+        ])->with([
+            'General_Service_Provider:id,name',
+            'General_Service_Term:id,name',
+        ])->get();
+
+        return response()->json($services, 200);
     }
 
     public function updateService(Request $request, $id)
@@ -76,6 +114,16 @@ class GeneralServiceController extends Controller
             $service->amount = $request['amount'];
         if($request['tax_state'])
             $service->tax_state = $request['tax_state'];
+
+        $provider_state = General_Service_Provider::find($service->provider_id)->tax_state;
+        $term_state = General_Service_Term::find($service->term_id)->tax_state;
+
+        if ($provider_state != $service->tax_state and $term_state != $service->tax_state)
+            return response()->json(['errors' => 'The provider state, term state and service state must be the same !'], 400);
+        if ($provider_state != $service->tax_state)
+            return response()->json(['errors' => 'The provider state and service state must be the same !'], 400);
+        if ($term_state != $service->tax_state)
+            return response()->json(['errors' => 'The term state and service state must be the same !'], 400);
 
         $service->save();
 

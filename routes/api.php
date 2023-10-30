@@ -113,6 +113,8 @@ Route::group(['middleware' => 'auth:api'], function(){
     // General Service
     Route::post('/general-service',[GeneralServiceController::class,'addService']);
     Route::get('/general-service/{branch}',[GeneralServiceController::class,'getServices']);
+    Route::get('/general-untaxedservice/{branch}',[GeneralServiceController::class,'getUntaxedServices']);
+    Route::get('/general-taxedservice/{branch}',[GeneralServiceController::class,'gettaxedServices']);
     Route::put('/general-service/{id}',[GeneralServiceController::class,'updateService']);
     Route::delete('/general-service/{id}',[GeneralServiceController::class,'deleteService']);
 
@@ -125,6 +127,7 @@ Route::group(['middleware' => 'auth:api'], function(){
     // Service
     Route::post('/service',[ServiceController::class,'addService']);
     Route::get('/service/{branch}',[ServiceController::class,'getServices']);
+    Route::get('/frequency-service/{branch}',[ServiceController::class,'getServicesFrequency']);
     Route::put('/service/{id}',[ServiceController::class,'updateService']);
     Route::delete('/service/{id}',[ServiceController::class,'deleteService']);
 
