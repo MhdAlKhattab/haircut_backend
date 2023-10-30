@@ -70,6 +70,30 @@ class EmployeeController extends Controller
         // Employee::with('Info')->where('id', '=', $employee->id)->first()
     }
 
+    public function payCommission(Request $request)
+    {
+        $validatedData = Validator::make($request->all(),
+            [
+                'employee_id' => 'required|numeric|exists:employees,id',
+                'amount' => 'required|numeric',
+            ]
+        );
+
+        if($validatedData->fails()){
+            return response()->json(["errors"=>$validatedData->errors()], 400);
+        }
+
+        $employee_info = Employee_Info::where('employee_id', '=', $request['employee_id'])->first();
+
+        if ($request['amount'] > ($employee_info->total_commission - $employee_info->payed_commission))
+            return response()->json(['errors' => 'The amount is greater than the remaining commission !'], 400);
+
+        $employee_info->payed_commission += $request['amount'];
+        $employee_info->save();
+
+        return response()->json(['message' => 'You payed ' . $request['amount']], 200);
+    }
+
     public function getEmployees($branch_id)
     {
         $branch = Branch::find($branch_id);
