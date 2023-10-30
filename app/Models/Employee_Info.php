@@ -17,6 +17,8 @@ class Employee_Info extends Model
     protected $fillable = [
         'employee_id',
         'current_salary',
+        'total_order',
+        'total_revenue',
         'total_commission',
         'payed_commission',
     ];

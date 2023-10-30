@@ -71,6 +71,7 @@ Route::group(['middleware' => 'auth:api'], function(){
     // Employee
     Route::post('/employee',[EmployeeController::class,'addEmployee']);
     Route::get('/employee/{branch}',[EmployeeController::class,'getEmployees']);
+    Route::get('/employee-info/{branch}',[EmployeeController::class,'getEmployeesInfo']);
     Route::put('/employee/{id}',[EmployeeController::class,'updateEmployee']);
     Route::delete('/employee/{id}',[EmployeeController::class,'deleteEmployee']);
 

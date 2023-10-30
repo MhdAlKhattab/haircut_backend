@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Order;
 use App\Models\Employee;
+use App\Models\Employee_Info;
 use App\Models\Branch;
 
 class OrderController extends Controller
@@ -93,6 +94,13 @@ class OrderController extends Controller
         if ($request['services'])
             $order->Services()->attach($request['services']);
 
+        // Get Employee Information
+        $employee_info = Employee_Info::where('employee_id', '=', $request['employee_id'])->first();
+        $employee_info->total_order += 1;
+        $employee_info->total_revenue += $order->amount_after_discount;
+        $employee_info->total_commission += $order->employee_commission;
+        $employee_info->save();
+
         return response()->json(['data' => $order,
                                 'products' => $request['products'],
                                 'products_count' => $request['products_count'],
@@ -161,6 +169,11 @@ class OrderController extends Controller
         if($request['tip_pay_type'])
             $order->tip_pay_type = $request['tip_pay_type'];
 
+        // Get Employee Information
+        $employee_info = Employee_Info::where('employee_id', '=', $order->employee_id)->first();
+        $employee_info->total_commission -= $order->employee_commission;
+        $employee_info->total_revenue -= $order->amount_after_discount;
+
         // Get Discounted Amount
         $discounted_amount = ($order->amount * $order->discount) / 100.0;
         $amount_after_discount = $order->amount - $discounted_amount;
@@ -177,6 +190,10 @@ class OrderController extends Controller
         $order->representative_commission = ($amount_after_discount * $representative_commission) / 100.0;
 
         $order->save();
+
+        $employee_info->total_commission += $order->employee_commission;
+        $employee_info->total_revenue += $order->amount_after_discount;
+        $employee_info->save();
 
         if ($request['products']){
             $productsWithPivot = [];
@@ -203,6 +220,13 @@ class OrderController extends Controller
         if(!$order){
             return response()->json(['errors' => 'There is no order with this id !'], 400);
         }
+
+        // Get Employee Information
+        $employee_info = Employee_Info::where('employee_id', '=', $order->employee_id)->first();
+        $employee_info->total_order -= 1;
+        $employee_info->total_revenue -= $order->amount_after_discount;
+        $employee_info->total_commission -= $order->employee_commission;
+        $employee_info->save();
 
         $order->delete();
         return response()->json(['message' => "Order Deleted"], 200);
