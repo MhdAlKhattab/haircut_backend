@@ -101,12 +101,16 @@ Route::group(['middleware' => 'auth:api'], function(){
     // General Provider
     Route::post('/provider',[GeneralServiceProviderController::class,'addProvider']);
     Route::get('/provider/{branch}',[GeneralServiceProviderController::class,'getProviders']);
+    Route::get('/untaxedprovider/{branch}',[GeneralServiceProviderController::class,'getUntaxedProviders']);
+    Route::get('/taxedprovider/{branch}',[GeneralServiceProviderController::class,'gettaxedProviders']);
     Route::put('/provider/{id}',[GeneralServiceProviderController::class,'updateProvider']);
     Route::delete('/provider/{id}',[GeneralServiceProviderController::class,'deleteProvider']);
 
     // General Term
     Route::post('/term',[GeneralServiceTermController::class,'addTerm']);
     Route::get('/term/{branch}',[GeneralServiceTermController::class,'getTerms']);
+    Route::get('/untaxedterm/{branch}',[GeneralServiceTermController::class,'getUntaxedTerms']);
+    Route::get('/taxedterm/{branch}',[GeneralServiceTermController::class,'gettaxedTerms']);
     Route::put('/term/{id}',[GeneralServiceTermController::class,'updateTerm']);
     Route::delete('/term/{id}',[GeneralServiceTermController::class,'deleteTerm']);
 

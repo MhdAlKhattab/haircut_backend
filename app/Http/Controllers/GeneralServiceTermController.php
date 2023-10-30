@@ -43,6 +43,26 @@ class GeneralServiceTermController extends Controller
         return response()->json($branch->General_Service_Terms, 200);
     }
 
+    public function getUntaxedTerms($branch_id)
+    {
+        $terms = General_Service_Term::where([
+            ['branch_id', '=', $branch_id],
+            ['tax_state', '=', 0]
+        ])->get();
+
+        return response()->json($terms, 200);
+    }
+
+    public function gettaxedTerms($branch_id)
+    {
+        $terms = General_Service_Term::where([
+            ['branch_id', '=', $branch_id],
+            ['tax_state', '=', 1]
+        ])->get();
+
+        return response()->json($terms, 200);
+    }
+
     public function updateTerm(Request $request, $id)
     {
         $term = General_Service_Term::find($id);

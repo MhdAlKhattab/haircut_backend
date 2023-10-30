@@ -40,9 +40,11 @@ class AdvancePayController extends Controller
 
     public function getAdvancePays($branch_id)
     {
-        $branch = Branch::find($branch_id);
+        $advance_pays = Advance_Pay::where('branch_id', '=', $branch_id)
+                        ->with('Employee:id,name')
+                        ->get();
 
-        return response()->json($branch->Advance_Pays, 200);
+        return response()->json($advance_pays, 200);
     }
 
     public function updateAdvancePay(Request $request, $id)

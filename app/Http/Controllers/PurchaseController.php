@@ -86,9 +86,13 @@ class PurchaseController extends Controller
 
     public function getPurchases($branch_id)
     {
-        $branch = Branch::find($branch_id);
+        $purchases = Purchase::where('branch_id', '=', $branch_id)
+                        ->with(['Supplier:id,name',
+                                'products:id,name',
+                                'sundry_products:id,name'])
+                        ->get();
 
-        return response()->json($branch->Purchases, 200);
+        return response()->json($purchases, 200);
     }
 
     public function updatePurchase(Request $request, $id)

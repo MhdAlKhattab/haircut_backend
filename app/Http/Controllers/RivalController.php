@@ -40,9 +40,11 @@ class RivalController extends Controller
 
     public function getRivals($branch_id)
     {
-        $branch = Branch::find($branch_id);
+        $rivals = Rival::where('branch_id', '=', $branch_id)
+                        ->with('Employee:id,name')
+                        ->get();
 
-        return response()->json($branch->Rivals, 200);
+        return response()->json($rivals, 200);
     }
 
     public function updateRival(Request $request, $id)

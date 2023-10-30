@@ -101,9 +101,14 @@ class OrderController extends Controller
 
     public function getOrders($branch_id)
     {
-        $branch = Branch::find($branch_id);
+        $orders = Order::where('branch_id', '=', $branch_id)
+                        ->with(['Employee:id,name',
+                                'Customer:id,name,phone_number',
+                                'services:id,name',
+                                'products:id,name'])
+                        ->get();
 
-        return response()->json($branch->Orders, 200);
+        return response()->json($orders, 200);
     }
 
     public function updateOrder(Request $request, $id)
