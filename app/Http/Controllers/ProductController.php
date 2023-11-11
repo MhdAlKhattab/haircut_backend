@@ -17,7 +17,6 @@ class ProductController extends Controller
             'purchasing_price' => 'required|numeric',
             'selling_price' => 'required|numeric',
             'image' => ['required', 'image','mimes:jpeg,jpg,png'],
-            'quantity' => 'integer',
         ]);
     }
 
@@ -34,9 +33,6 @@ class ProductController extends Controller
         $product->name = $request['name'];
         $product->purchasing_price = $request['purchasing_price'];
         $product->selling_price = $request['selling_price'];
-
-        if ($request['quantity'])
-            $product->quantity = $request['quantity'];
 
         if ($request->hasFile('image')) {
 
@@ -85,7 +81,6 @@ class ProductController extends Controller
                 'purchasing_price' => 'numeric',
                 'selling_price' => 'numeric',
                 'image' => ['image','mimes:jpeg,jpg,png'],
-                'quantity' => 'integer',
             ]
         );
 
@@ -99,8 +94,6 @@ class ProductController extends Controller
             $product->purchasing_price = $request['purchasing_price'];
         if($request['selling_price'])
             $product->selling_price = $request['selling_price'];
-        if($request['quantity'])
-            $product->quantity = $request['quantity'];
         if ($request->hasFile('image')) {
 
             // Get filename with extension

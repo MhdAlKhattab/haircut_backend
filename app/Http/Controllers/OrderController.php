@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use App\Models\Product;
 use App\Models\Order;
 use App\Models\Employee;
 use App\Models\Employee_Info;
@@ -44,6 +46,13 @@ class OrderController extends Controller
             return response()->json(['errors' => 'There are no products count!'], 400);
         if ($request['products'] and count($request['products_count']) != count($request['products'])) 
             return response()->json(['errors' => 'The size of count array does not equal product array!'], 400);
+        if ($request['products']){
+            for ($i = 0; $i < count($request['products']); $i+=1){
+                $product = Product::find($request['products'][$i]);
+                if ($request['products_count'][$i] > $product->quantity)
+                    return response()->json(['errors' => 'There is no enough products!'], 400);
+            }
+        }
 
         // Initial
         $amount_after_discount = $request['amount'];
@@ -86,6 +95,10 @@ class OrderController extends Controller
             $productsWithPivot = [];
 
             for ($i = 0; $i < count($request['products']); $i+=1) {
+                $product = Product::find($request['products'][$i]);
+                $product->quantity -= $request['products_count'][$i];
+                $product->save();
+
                 $productsWithPivot[$request['products'][$i]] = ['quantity' => $request['products_count'][$i]];
             }
 
@@ -117,6 +130,20 @@ class OrderController extends Controller
                         ->get();
 
         return response()->json($orders, 200);
+    }
+
+    public function getDailyReport($branch_id)
+    {
+        $daily_orders = DB::table('orders as o')
+                ->select(array(DB::Raw('count(o.id) as Total_Orders'),
+                            DB::Raw('sum(o.amount_after_discount) as Total_Revenues'),
+                            DB::Raw('sum(o.employee_commission) as Total_Commissions'),
+                            DB::Raw('DATE(o.created_at) as day')))
+                ->groupBy('day')
+                ->orderBy('o.created_at', 'DESC')
+                ->get();
+
+        return response()->json($daily_orders, 200);
     }
 
     public function updateOrder(Request $request, $id)
@@ -153,6 +180,27 @@ class OrderController extends Controller
             return response()->json(['errors' => 'There are no products count!'], 400);
         if ($request['products'] and count($request['products_count']) != count($request['products'])) 
             return response()->json(['errors' => 'The size of count array does not equal product array!'], 400);
+        if ($request['products']){
+            $products = $order->Products;
+            for ($i = 0; $i < count($products); $i+=1){
+                $product = Product::find($products[$i]->id);
+                $product->quantity += $products[$i]->pivot->quantity;
+                $product->save();
+            }
+
+            for ($i = 0; $i < count($request['products']); $i+=1){
+                $product = Product::find($request['products'][$i]);
+
+                if ($request['products_count'][$i] > $product->quantity){
+                    for ($i = 0; $i < count($products); $i+=1){
+                        $product = Product::find($products[$i]->id);
+                        $product->quantity -= $products[$i]->pivot->quantity;
+                        $product->save();
+                    }
+                    return response()->json(['errors' => 'There is no enough products!'], 400);
+                }
+            }
+        }
 
         if($request['employee_id'])
             $order->employee_id = $request['employee_id'];
@@ -199,6 +247,10 @@ class OrderController extends Controller
             $productsWithPivot = [];
 
             for ($i = 0; $i < count($request['products']); $i+=1) {
+                $product = Product::find($request['products'][$i]);
+                $product->quantity -= $request['products_count'][$i];
+                $product->save();
+
                 $productsWithPivot[$request['products'][$i]] = ['quantity' => $request['products_count'][$i]];
             }
 
@@ -227,6 +279,13 @@ class OrderController extends Controller
         $employee_info->total_revenue -= $order->amount_after_discount;
         $employee_info->total_commission -= $order->employee_commission;
         $employee_info->save();
+
+        $products = $order->Products;
+        for ($i = 0; $i < count($products); $i+=1){
+            $product = Product::find($products[$i]->id);
+            $product->quantity += $products[$i]->pivot->quantity;
+            $product->save();
+        }
 
         $order->delete();
         return response()->json(['message' => "Order Deleted"], 200);

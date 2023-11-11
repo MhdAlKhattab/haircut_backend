@@ -20,7 +20,7 @@ return new class extends Migration
             $table->float('selling_price');
             $table->string('image');
             
-            $table->integer('quantity')->default(1);
+            $table->integer('quantity')->default(0);
             
             $table->timestamps();
         });

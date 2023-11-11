@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Purchase;
+use App\Models\Product;
 use App\Models\Branch;
 
 class PurchaseController extends Controller
@@ -71,6 +72,10 @@ class PurchaseController extends Controller
             $productsWithPivot = [];
 
             for ($i = 0; $i < count($request['products']); $i+=1) {
+                $product = Product::find($request['products'][$i]);
+                $product->quantity += $request['products_count'][$i];
+                $product->save();
+
                 $productsWithPivot[$request['products'][$i]] = ['quantity' => $request['products_count'][$i]];
             }
 
@@ -147,9 +152,21 @@ class PurchaseController extends Controller
         $purchase->save();
 
         if ($request['products']){
+
+            $products = $purchase->Products;
+            for ($i = 0; $i < count($products); $i+=1){
+                $product = Product::find($products[$i]->id);
+                $product->quantity -= $products[$i]->pivot->quantity;
+                $product->save();
+            }
+
             $productsWithPivot = [];
 
             for ($i = 0; $i < count($request['products']); $i+=1) {
+                $product = Product::find($request['products'][$i]);
+                $product->quantity += $request['products_count'][$i];
+                $product->save();
+
                 $productsWithPivot[$request['products'][$i]] = ['quantity' => $request['products_count'][$i]];
             }
 
@@ -169,6 +186,13 @@ class PurchaseController extends Controller
 
         if(!$purchase){
             return response()->json(['errors' => 'There is no purchase with this id !'], 400);
+        }
+        
+        $products = $purchase->Products;
+        for ($i = 0; $i < count($products); $i+=1){
+            $product = Product::find($products[$i]->id);
+            $product->quantity -= $products[$i]->pivot->quantity;
+            $product->save();
         }
 
         $purchase->delete();

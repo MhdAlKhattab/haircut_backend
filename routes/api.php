@@ -79,6 +79,7 @@ Route::group(['middleware' => 'auth:api'], function(){
     // Order
     Route::post('/order',[OrderController::class,'addOrder']);
     Route::get('/order/{branch}',[OrderController::class,'getOrders']);
+    Route::get('/daily-report/{branch}',[OrderController::class,'getDailyReport']);
     Route::put('/order/{id}',[OrderController::class,'updateOrder']);
     Route::delete('/order/{id}',[OrderController::class,'deleteOrder']);
 
