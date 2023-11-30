@@ -87,7 +87,7 @@ class GeneralServiceProviderController extends Controller
 
         if($request['name'])
             $provider->name = $request['name'];
-        if($request['tax_state'])
+        if($request['tax_state'] != null)
             $provider->tax_state = $request['tax_state'];
         if($request['tax_number'])
             $provider->tax_number = $request['tax_number'];

@@ -84,7 +84,7 @@ class GeneralServiceTermController extends Controller
 
         if($request['name'])
             $term->name = $request['name'];
-        if($request['tax_state'])
+        if($request['tax_state'] != null)
             $term->tax_state = $request['tax_state'];
 
         $term->save();

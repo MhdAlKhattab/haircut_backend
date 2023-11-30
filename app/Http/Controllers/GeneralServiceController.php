@@ -112,7 +112,7 @@ class GeneralServiceController extends Controller
             $service->term_id = $request['term_id'];
         if($request['amount'])
             $service->amount = $request['amount'];
-        if($request['tax_state'])
+        if($request['tax_state'] != null)
             $service->tax_state = $request['tax_state'];
 
         $provider_state = General_Service_Provider::find($service->provider_id)->tax_state;

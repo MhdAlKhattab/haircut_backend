@@ -171,7 +171,7 @@ class EmployeeController extends Controller
             $employee->insurance_cost = $request['insurance_cost'];
         if($request['costs_responsible'])
             $employee->costs_responsible = $request['costs_responsible'];
-        if($request['state'])
+        if($request['state'] != null)
             $employee->state = $request['state'];
 
         $employee->save();
