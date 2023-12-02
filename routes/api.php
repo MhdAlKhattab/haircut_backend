@@ -76,6 +76,7 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::get('/employee/{branch}',[EmployeeController::class,'getEmployees']);
     Route::post('/employee/{branch}',[EmployeeController::class,'searchEmployees']);
     Route::get('/employee-info/{branch}',[EmployeeController::class,'getEmployeesInfo']);
+    Route::post('/employee-info/{branch}',[EmployeeController::class,'searchEmployeesInfo']);
     Route::put('/employee/{id}',[EmployeeController::class,'updateEmployee']);
     Route::delete('/employee/{id}',[EmployeeController::class,'deleteEmployee']);
 
@@ -120,6 +121,7 @@ Route::group(['middleware' => 'auth:api'], function(){
     // General Term
     Route::post('/term',[GeneralServiceTermController::class,'addTerm']);
     Route::get('/term/{branch}',[GeneralServiceTermController::class,'getTerms']);
+    Route::post('/term/{branch}',[GeneralServiceTermController::class,'searchTerms']);
     Route::get('/untaxedterm/{branch}',[GeneralServiceTermController::class,'getUntaxedTerms']);
     Route::get('/taxedterm/{branch}',[GeneralServiceTermController::class,'gettaxedTerms']);
     Route::put('/term/{id}',[GeneralServiceTermController::class,'updateTerm']);
@@ -130,6 +132,8 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::get('/general-service/{branch}',[GeneralServiceController::class,'getServices']);
     Route::get('/general-untaxedservice/{branch}',[GeneralServiceController::class,'getUntaxedServices']);
     Route::get('/general-taxedservice/{branch}',[GeneralServiceController::class,'gettaxedServices']);
+    Route::post('/general-untaxedservice/{branch}',[GeneralServiceController::class,'searchUntaxedServices']);
+    Route::post('/general-taxedservice/{branch}',[GeneralServiceController::class,'searchtaxedServices']);
     Route::put('/general-service/{id}',[GeneralServiceController::class,'updateService']);
     Route::delete('/general-service/{id}',[GeneralServiceController::class,'deleteService']);
 
@@ -159,6 +163,7 @@ Route::group(['middleware' => 'auth:api'], function(){
     // Sundry Product
     Route::post('/sundry',[SundryProductController::class,'addSundryProduct']);
     Route::get('/sundry/{branch}',[SundryProductController::class,'getSundryProducts']);
+    Route::post('/sundry/{branch}',[SundryProductController::class,'searchSundryProducts']);
     Route::put('/sundry/{id}',[SundryProductController::class,'updateSundryProduct']);
     Route::delete('/sundry/{id}',[SundryProductController::class,'deleteSundryProduct']);
 

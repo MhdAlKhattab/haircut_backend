@@ -72,6 +72,27 @@ class GeneralServiceController extends Controller
         return response()->json($services, 200);
     }
 
+    public function searchUntaxedServices(Request $request, $branch_id)
+    {
+        $services = General_Service::where([
+            ['branch_id', '=', $branch_id],
+            ['tax_state', '=', 0]
+        ])
+        ->with([
+            'General_Service_Provider:id,name',
+            'General_Service_Term:id,name',
+        ])
+        ->whereHas('General_Service_Provider', function($q) use($request) {
+            $q->where('name', 'LIKE', '%' . $request['query'] . '%');
+        })
+        ->orWhereHas('General_Service_Term', function($q) use($request) {
+            $q->where('name', 'LIKE', '%' . $request['query'] . '%');
+        })
+        ->get();
+
+        return response()->json($services, 200);
+    }
+
     public function gettaxedServices($branch_id)
     {
         $services = General_Service::where([
@@ -81,6 +102,27 @@ class GeneralServiceController extends Controller
             'General_Service_Provider:id,name',
             'General_Service_Term:id,name',
         ])->get();
+
+        return response()->json($services, 200);
+    }
+
+    public function searchtaxedServices(Request $request, $branch_id)
+    {
+        $services = General_Service::where([
+            ['branch_id', '=', $branch_id],
+            ['tax_state', '=', 1]
+        ])
+        ->with([
+            'General_Service_Provider:id,name',
+            'General_Service_Term:id,name',
+        ])
+        ->whereHas('General_Service_Provider', function($q) use($request) {
+            $q->where('name', 'LIKE', '%' . $request['query'] . '%');
+        })
+        ->orWhereHas('General_Service_Term', function($q) use($request) {
+            $q->where('name', 'LIKE', '%' . $request['query'] . '%');
+        })
+        ->get();
 
         return response()->json($services, 200);
     }

@@ -43,6 +43,16 @@ class SundryProductController extends Controller
         return response()->json($branch->Sundry_Products, 200);
     }
 
+    public function searchSundryProducts(Request $request, $branch_id)
+    {
+        $sundry_products = Sundry_Product::where([
+            ['branch_id', '=', $branch_id],
+            ['name', 'LIKE', '%' . $request['query'] . '%']
+        ])->get();
+
+        return response()->json($sundry_products, 200);
+    }
+
     public function updateSundryProduct(Request $request, $id)
     {
         $sundry_product = Sundry_Product::find($id);
