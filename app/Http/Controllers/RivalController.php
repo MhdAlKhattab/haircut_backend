@@ -47,6 +47,18 @@ class RivalController extends Controller
         return response()->json($rivals, 200);
     }
 
+    public function searchRivals(Request $request, $branch_id)
+    {
+        $rivals = Rival::where('branch_id', '=', $branch_id)
+                        ->with('Employee:id,name')
+                        ->whereHas('Employee', function($q) use($request) {
+                            $q->where('name', 'LIKE', '%' . $request['query'] . '%');
+                        })
+                        ->get();
+
+        return response()->json($rivals, 200);
+    }
+
     public function updateRival(Request $request, $id)
     {
         $rival = Rival::find($id);

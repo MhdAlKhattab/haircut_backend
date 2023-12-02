@@ -47,6 +47,18 @@ class AdvancePayController extends Controller
         return response()->json($advance_pays, 200);
     }
 
+    public function searchAdvancePays(Request $request, $branch_id)
+    {
+        $advance_pays = Advance_Pay::where('branch_id', '=', $branch_id)
+                        ->with('Employee:id,name')
+                        ->whereHas('Employee', function($q) use($request) {
+                            $q->where('name', 'LIKE', '%' . $request['query'] . '%');
+                        })
+                        ->get();
+
+        return response()->json($advance_pays, 200);
+    }
+
     public function updateAdvancePay(Request $request, $id)
     {
         $advance_pay = Advance_Pay::find($id);

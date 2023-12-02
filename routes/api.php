@@ -188,12 +188,14 @@ Route::group(['middleware' => 'auth:api'], function(){
     // Advance Pay
     Route::post('/advance',[AdvancePayController::class,'addAdvancePay']);
     Route::get('/advance/{branch}',[AdvancePayController::class,'getAdvancePays']);
+    Route::post('/advance/{branch}',[AdvancePayController::class,'searchAdvancePays']);
     Route::put('/advance/{id}',[AdvancePayController::class,'updateAdvancePay']);
     Route::delete('/advance/{id}',[AdvancePayController::class,'deleteAdvancePay']);
 
     // Rival
     Route::post('/rival',[RivalController::class,'addRival']);
     Route::get('/rival/{branch}',[RivalController::class,'getRivals']);
+    Route::post('/rival/{branch}',[RivalController::class,'searchRivals']);
     Route::put('/rival/{id}',[RivalController::class,'updateRival']);
     Route::delete('/rival/{id}',[RivalController::class,'deleteRival']);
     
