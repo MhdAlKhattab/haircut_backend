@@ -13,7 +13,7 @@ class SalonDateController extends Controller
     {
         return Validator::make($data, [
             'branch_id' => 'required|numeric|exists:branches,id',
-            'day' => 'required|string|in:sunday,monday,tuesday,wednesday,thursday,friday,saturday|unique:salon__dates',
+            'day' => 'required|string|unique:salon__dates',
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',
         ]);
@@ -55,7 +55,7 @@ class SalonDateController extends Controller
 
         $validatedData = Validator::make($request->all(),
             [
-                'day' => 'string|in:sunday,monday,tuesday,wednesday,thursday,friday,saturday|unique:salon__dates',
+                'day' => 'string|unique:salon__dates',
                 'start_time' => 'date_format:H:i',
                 'end_time' => 'date_format:H:i|after:start_time',
             ]

@@ -15,15 +15,19 @@ class GeneralServiceProviderController extends Controller
             'branch_id' => 'required|numeric|exists:branches,id',
             'name' => 'required|string|max:255',
             'tax_state' => 'required|boolean',
-            'tax_number' => 'required|numeric|unique:general__service__providers',     
+            'tax_number' => 'numeric|unique:general__service__providers',     
         ]);
     }
 
     public function addProvider(Request $request)
     {
         $validatedData = $this->validator($request->all());
-        if ($validatedData->fails())  {
+        if ($validatedData->fails()){
             return response()->json(['errors'=>$validatedData->errors()], 400);
+        }
+
+        if ($request['tax_state'] and !$request['tax_number']){
+            return response()->json(['errors' => 'You must send tax number!'], 400);
         }
 
         $provider = new General_Service_Provider;
@@ -31,7 +35,10 @@ class GeneralServiceProviderController extends Controller
         $provider->branch_id = $request['branch_id'];
         $provider->name = $request['name'];
         $provider->tax_state = $request['tax_state'];
-        $provider->tax_number = $request['tax_number'];
+        if ($request['tax_state'])
+            $provider->tax_number = $request['tax_number'];
+        else
+            $provider->tax_number = -1;
 
         $provider->save();
 
