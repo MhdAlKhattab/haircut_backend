@@ -52,6 +52,16 @@ class GeneralServiceProviderController extends Controller
         return response()->json($branch->General_Service_Providers, 200);
     }
 
+    public function searchProviders(Request $request, $branch_id)
+    {
+        $providers = General_Service_Provider::where([
+            ['branch_id', '=', $branch_id],
+            ['name', 'LIKE', '%' . $request['query'] . '%']
+        ])->get();
+
+        return response()->json($providers, 200);
+    }
+
     public function getUntaxedProviders($branch_id)
     {
         $providers = General_Service_Provider::where([

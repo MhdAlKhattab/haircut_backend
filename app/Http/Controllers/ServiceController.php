@@ -47,9 +47,35 @@ class ServiceController extends Controller
         return response()->json($branch->Services, 200);
     }
 
+    public function searchServices(Request $request, $branch_id)
+    {
+        $services = Service::where([
+            ['branch_id', '=', $branch_id],
+            ['name', 'LIKE', '%' . $request['query'] . '%']
+        ])->get();
+
+        return response()->json($services, 200);
+    }
+
     public function getServicesFrequency($branch_id)
     {
         $services = Service::where('branch_id', '=', $branch_id)
+                            ->withCount('orders')
+                            ->get();
+
+        foreach ($services as $service) {
+            $service->total_revenue = $service->price * $service->orders_count;
+        }
+
+        return response()->json($services, 200);
+    }
+
+    public function searchServicesFrequency(Request $request, $branch_id)
+    {
+        $services = Service::where([
+                                ['branch_id', '=', $branch_id],
+                                ['name', 'LIKE', '%' . $request['query'] . '%']
+                            ])
                             ->withCount('orders')
                             ->get();
 

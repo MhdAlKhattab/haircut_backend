@@ -101,6 +101,16 @@ class EmployeeController extends Controller
         return response()->json($branch->Employees, 200);
     }
 
+    public function searchEmployees(Request $request, $branch_id)
+    {
+        $employees = Employee::where([
+            ['branch_id', '=', $branch_id],
+            ['name', 'LIKE', '%' . $request['query'] . '%'],
+        ])->get();
+
+        return response()->json($employees, 200);
+    }
+
     public function getEmployeesInfo($branch_id)
     {
         $employees_info = Employee::where('branch_id', '=', $branch_id)

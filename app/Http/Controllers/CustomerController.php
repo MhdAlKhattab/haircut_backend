@@ -44,6 +44,16 @@ class CustomerController extends Controller
         return response()->json($branch->Customers, 200);
     }
 
+    public function searchCustomers(Request $request, $branch_id)
+    {
+        $customers = Customer::where([
+            ['branch_id', '=', $branch_id],
+            ['name', 'LIKE', '%' . $request['query'] . '%']
+        ])->get();
+
+        return response()->json($customers, 200);
+    }
+
     public function updateCustomer(Request $request, $id)
     {
         $customer = Customer::find($id);

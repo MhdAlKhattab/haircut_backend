@@ -43,6 +43,16 @@ class SupplierController extends Controller
         return response()->json($branch->Suppliers, 200);
     }
 
+    public function searchSuppliers(Request $request, $branch_id)
+    {
+        $suppliers = Supplier::where([
+            ['branch_id', '=', $branch_id],
+            ['name', 'LIKE', '%' . $request['query'] . '%']
+        ])->get();
+
+        return response()->json($suppliers, 200);
+    }
+
     public function updateSupplier(Request $request, $id)
     {
         $supplier = Supplier::find($id);

@@ -89,12 +89,63 @@ class PurchaseController extends Controller
                                 'sundrys' => $request['sundrys']], 200);
     }
 
-    public function getPurchases($branch_id)
+    public function getProductPurchases($branch_id)
     {
-        $purchases = Purchase::where('branch_id', '=', $branch_id)
+        $purchases = Purchase::where([
+                                ['branch_id', '=', $branch_id],
+                                ['type', 'LIKE', 'product']
+                            ])
                         ->with(['Supplier:id,name',
                                 'products:id,name',
                                 'sundry_products:id,name'])
+                        ->get();
+
+        return response()->json($purchases, 200);
+    }
+
+    public function getSundryPurchases($branch_id)
+    {
+        $purchases = Purchase::where([
+                                ['branch_id', '=', $branch_id],
+                                ['type', 'LIKE', 'sundry']
+                            ])
+                        ->with(['Supplier:id,name',
+                                'products:id,name',
+                                'sundry_products:id,name'])
+                        ->get();
+
+        return response()->json($purchases, 200);
+    }
+
+    public function searchProductPurchases(Request $request, $branch_id)
+    {
+        $purchases = Purchase::where([
+                                ['branch_id', '=', $branch_id],
+                                ['type', 'LIKE', 'product']
+                            ])
+                        ->with(['Supplier:id,name',
+                                'products:id,name',
+                                'sundry_products:id,name'])
+                        ->whereHas('Supplier', function($q) use($request) {
+                                $q->where('name', 'LIKE', '%' . $request['query'] . '%');
+                            })
+                        ->get();
+
+        return response()->json($purchases, 200);
+    }
+
+    public function searchSundryPurchases(Request $request, $branch_id)
+    {
+        $purchases = Purchase::where([
+                                ['branch_id', '=', $branch_id],
+                                ['type', 'LIKE', 'sundry']
+                            ])
+                        ->with(['Supplier:id,name',
+                                'products:id,name',
+                                'sundry_products:id,name'])
+                        ->whereHas('Supplier', function($q) use($request) {
+                                $q->where('name', 'LIKE', '%' . $request['query'] . '%');
+                            })
                         ->get();
 
         return response()->json($purchases, 200);

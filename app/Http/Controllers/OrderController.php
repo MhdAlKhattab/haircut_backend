@@ -132,6 +132,21 @@ class OrderController extends Controller
         return response()->json($orders, 200);
     }
 
+    public function searchOrders(Request $request, $branch_id)
+    {
+        $orders = Order::where('branch_id', '=', $branch_id)
+                ->with(['Employee:id,name',
+                        'Customer:id,name,phone_number',
+                        'services:id,name',
+                        'products:id,name'])
+                ->whereHas('Employee', function($q) use($request) {
+                        $q->where('name', 'LIKE', '%' . $request['query'] . '%');
+                    })
+                ->get();
+
+        return response()->json($orders, 200);
+    }
+
     public function getDailyReport($branch_id)
     {
         $daily_orders = DB::table('orders as o')

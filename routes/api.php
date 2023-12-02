@@ -55,6 +55,7 @@ Route::group(['middleware' => 'auth:api'], function(){
     // User
     Route::get('/user',[UserController::class,'Me']);
     Route::get('/user/{branch}',[UserController::class,'getUsers']);
+    Route::post('/user/{branch}',[UserController::class,'searchUsers']);
     Route::put('/user',[userController::class,'updateUser']);
 
     // Branch
@@ -65,6 +66,7 @@ Route::group(['middleware' => 'auth:api'], function(){
     // Customer
     Route::post('/customer',[CustomerController::class,'addCustomer']);
     Route::get('/customer/{branch}',[CustomerController::class,'getCustomers']);
+    Route::post('/customer/{branch}',[CustomerController::class,'searchCustomers']);
     Route::put('/customer/{id}',[CustomerController::class,'updateCustomer']);
     Route::delete('/customer/{id}',[CustomerController::class,'deleteCustomer']);
 
@@ -72,6 +74,7 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::post('/employee',[EmployeeController::class,'addEmployee']);
     Route::post('/pay-commission',[EmployeeController::class,'payCommission']);
     Route::get('/employee/{branch}',[EmployeeController::class,'getEmployees']);
+    Route::post('/employee/{branch}',[EmployeeController::class,'searchEmployees']);
     Route::get('/employee-info/{branch}',[EmployeeController::class,'getEmployeesInfo']);
     Route::put('/employee/{id}',[EmployeeController::class,'updateEmployee']);
     Route::delete('/employee/{id}',[EmployeeController::class,'deleteEmployee']);
@@ -79,13 +82,17 @@ Route::group(['middleware' => 'auth:api'], function(){
     // Order
     Route::post('/order',[OrderController::class,'addOrder']);
     Route::get('/order/{branch}',[OrderController::class,'getOrders']);
+    Route::post('/order/{branch}',[OrderController::class,'searchOrders']);
     Route::get('/daily-report/{branch}',[OrderController::class,'getDailyReport']);
     Route::put('/order/{id}',[OrderController::class,'updateOrder']);
     Route::delete('/order/{id}',[OrderController::class,'deleteOrder']);
 
     // Purchase
     Route::post('/purchase',[PurchaseController::class,'addPurchase']);
-    Route::get('/purchase/{branch}',[PurchaseController::class,'getPurchases']);
+    Route::get('/product-purchase/{branch}',[PurchaseController::class,'getProductPurchases']);
+    Route::get('/sundry-purchase/{branch}',[PurchaseController::class,'getSundryPurchases']);
+    Route::post('/product-purchase/{branch}',[PurchaseController::class,'searchProductPurchases']);
+    Route::post('/sundry-purchase/{branch}',[PurchaseController::class,'searchSundryPurchases']);
     Route::put('/purchase/{id}',[PurchaseController::class,'updatePurchase']);
     Route::delete('/purchase/{id}',[PurchaseController::class,'deletePurchase']);
 
@@ -104,6 +111,7 @@ Route::group(['middleware' => 'auth:api'], function(){
     // General Provider
     Route::post('/provider',[GeneralServiceProviderController::class,'addProvider']);
     Route::get('/provider/{branch}',[GeneralServiceProviderController::class,'getProviders']);
+    Route::post('/provider/{branch}',[GeneralServiceProviderController::class,'searchProviders']);
     Route::get('/untaxedprovider/{branch}',[GeneralServiceProviderController::class,'getUntaxedProviders']);
     Route::get('/taxedprovider/{branch}',[GeneralServiceProviderController::class,'gettaxedProviders']);
     Route::put('/provider/{id}',[GeneralServiceProviderController::class,'updateProvider']);
@@ -128,19 +136,23 @@ Route::group(['middleware' => 'auth:api'], function(){
     // Product
     Route::post('/product',[ProductController::class,'addProduct']);
     Route::get('/product/{branch}',[ProductController::class,'getProducts']);
+    Route::post('/product/{branch}',[ProductController::class,'searchProducts']);
     Route::put('/product/{id}',[ProductController::class,'updateProduct']);
     Route::delete('/product/{id}',[ProductController::class,'deleteProduct']);
 
     // Service
     Route::post('/service',[ServiceController::class,'addService']);
     Route::get('/service/{branch}',[ServiceController::class,'getServices']);
+    Route::post('/service/{branch}',[ServiceController::class,'searchServices']);
     Route::get('/frequency-service/{branch}',[ServiceController::class,'getServicesFrequency']);
+    Route::post('/frequency-service/{branch}',[ServiceController::class,'searchServicesFrequency']);
     Route::put('/service/{id}',[ServiceController::class,'updateService']);
     Route::delete('/service/{id}',[ServiceController::class,'deleteService']);
 
     // Supplier
     Route::post('/supplier',[SupplierController::class,'addSupplier']);
     Route::get('/supplier/{branch}',[SupplierController::class,'getSuppliers']);
+    Route::post('/supplier/{branch}',[SupplierController::class,'searchSuppliers']);
     Route::put('/supplier/{id}',[SupplierController::class,'updateSupplier']);
     Route::delete('/supplier/{id}',[SupplierController::class,'deleteSupplier']);
 

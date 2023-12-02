@@ -67,6 +67,16 @@ class ProductController extends Controller
         return response()->json($branch->Products, 200);
     }
 
+    public function searchProducts(Request $request, $branch_id)
+    {
+        $products = Product::where([
+            ['branch_id', '=', $branch_id],
+            ['name', 'LIKE', '%' . $request['query'] . '%']
+        ])->get();
+
+        return response()->json($products, 200);
+    }
+
     public function updateProduct(Request $request, $id)
     {
         $product = Product::find($id);
