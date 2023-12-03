@@ -135,14 +135,38 @@ class OrderController extends Controller
     public function searchOrders(Request $request, $branch_id)
     {
         $orders = Order::where('branch_id', '=', $branch_id)
-                ->with(['Employee:id,name',
-                        'Customer:id,name,phone_number',
-                        'services:id,name',
-                        'products:id,name'])
-                ->whereHas('Employee', function($q) use($request) {
-                        $q->where('name', 'LIKE', '%' . $request['query'] . '%');
-                    })
-                ->get();
+                        ->with(['Employee:id,name',
+                                'Customer:id,name,phone_number',
+                                'services:id,name',
+                                'products:id,name'])
+                        ->whereHas('Employee', function($q) use($request) {
+                                $q->where('name', 'LIKE', '%' . $request['query'] . '%');
+                            })
+                        ->get();
+
+        return response()->json($orders, 200);
+    }
+
+    public function filterOrders(Request $request, $branch_id)
+    {
+        $validatedData = Validator::make($request->all(),
+            [
+                'start_date' => 'required|date_format:Y-m-d',
+                'end_date' => 'required|date_format:Y-m-d|after_or_equal:start_date',
+            ]
+        );
+
+        if($validatedData->fails()){
+            return response()->json(["errors"=>$validatedData->errors()], 400);
+        }
+        
+        $orders = Order::where('branch_id', '=', $branch_id)
+                        ->whereBetween('created_at', [$request['start_date'], $request['end_date']])
+                        ->with(['Employee:id,name',
+                                'Customer:id,name,phone_number',
+                                'services:id,name',
+                                'products:id,name'])
+                        ->get();
 
         return response()->json($orders, 200);
     }
@@ -150,6 +174,32 @@ class OrderController extends Controller
     public function getDailyReport($branch_id)
     {
         $daily_orders = DB::table('orders as o')
+                ->select(array(DB::Raw('count(o.id) as Total_Orders'),
+                            DB::Raw('sum(o.amount_after_discount) as Total_Revenues'),
+                            DB::Raw('sum(o.employee_commission) as Total_Commissions'),
+                            DB::Raw('DATE(o.created_at) as day')))
+                ->groupBy('day')
+                ->orderBy('o.created_at', 'DESC')
+                ->get();
+
+        return response()->json($daily_orders, 200);
+    }
+
+    public function filterDailyReport(Request $request, $branch_id)
+    {
+        $validatedData = Validator::make($request->all(),
+            [
+                'start_date' => 'required|date_format:Y-m-d',
+                'end_date' => 'required|date_format:Y-m-d|after_or_equal:start_date',
+            ]
+        );
+
+        if($validatedData->fails()){
+            return response()->json(["errors"=>$validatedData->errors()], 400);
+        }
+
+        $daily_orders = DB::table('orders as o')
+                ->whereBetween('o.created_at', [$request['start_date'], $request['end_date']])
                 ->select(array(DB::Raw('count(o.id) as Total_Orders'),
                             DB::Raw('sum(o.amount_after_discount) as Total_Revenues'),
                             DB::Raw('sum(o.employee_commission) as Total_Commissions'),

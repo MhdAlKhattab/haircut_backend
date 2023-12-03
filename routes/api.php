@@ -84,7 +84,9 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::post('/order',[OrderController::class,'addOrder']);
     Route::get('/order/{branch}',[OrderController::class,'getOrders']);
     Route::post('/order/{branch}',[OrderController::class,'searchOrders']);
+    Route::post('/filter-order/{branch}',[OrderController::class,'filterOrders']);
     Route::get('/daily-report/{branch}',[OrderController::class,'getDailyReport']);
+    Route::post('/filter-daily-report/{branch}',[OrderController::class,'filterDailyReport']);
     Route::put('/order/{id}',[OrderController::class,'updateOrder']);
     Route::delete('/order/{id}',[OrderController::class,'deleteOrder']);
 
@@ -94,6 +96,8 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::get('/sundry-purchase/{branch}',[PurchaseController::class,'getSundryPurchases']);
     Route::post('/product-purchase/{branch}',[PurchaseController::class,'searchProductPurchases']);
     Route::post('/sundry-purchase/{branch}',[PurchaseController::class,'searchSundryPurchases']);
+    Route::post('/filter-product-purchase/{branch}',[PurchaseController::class,'filterProductPurchases']);
+    Route::post('/filter-sundry-purchase/{branch}',[PurchaseController::class,'filterSundryPurchases']);
     Route::put('/purchase/{id}',[PurchaseController::class,'updatePurchase']);
     Route::delete('/purchase/{id}',[PurchaseController::class,'deletePurchase']);
 
@@ -176,12 +180,14 @@ Route::group(['middleware' => 'auth:api'], function(){
     // Cashier Deposit
     Route::post('/deposit',[CashierDepositController::class,'addCashierDeposit']);
     Route::get('/deposit/{branch}',[CashierDepositController::class,'getCashierDeposits']);
+    Route::post('/filter-deposit/{branch}',[CashierDepositController::class,'filterCashierDeposits']);
     Route::put('/deposit/{id}',[CashierDepositController::class,'updateCashierDeposit']);
     Route::delete('/deposit/{id}',[CashierDepositController::class,'deleteCashierDeposit']);
 
     // Cashier Withdraw
     Route::post('/withdraw',[CashierWithdrawController::class,'addCashierWithdraw']);
     Route::get('/withdraw/{branch}',[CashierWithdrawController::class,'getCashierWithdraws']);
+    Route::post('/filter-withdraw/{branch}',[CashierWithdrawController::class,'filterCashierWithdraws']);
     Route::put('/withdraw/{id}',[CashierWithdrawController::class,'updateCashierWithdraw']);
     Route::delete('/withdraw/{id}',[CashierWithdrawController::class,'deleteCashierWithdraw']);
 
@@ -189,6 +195,7 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::post('/advance',[AdvancePayController::class,'addAdvancePay']);
     Route::get('/advance/{branch}',[AdvancePayController::class,'getAdvancePays']);
     Route::post('/advance/{branch}',[AdvancePayController::class,'searchAdvancePays']);
+    Route::post('/filter-advance/{branch}',[AdvancePayController::class,'filterAdvancePays']);
     Route::put('/advance/{id}',[AdvancePayController::class,'updateAdvancePay']);
     Route::delete('/advance/{id}',[AdvancePayController::class,'deleteAdvancePay']);
 
@@ -196,6 +203,7 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::post('/rival',[RivalController::class,'addRival']);
     Route::get('/rival/{branch}',[RivalController::class,'getRivals']);
     Route::post('/rival/{branch}',[RivalController::class,'searchRivals']);
+    Route::post('/filter-rival/{branch}',[RivalController::class,'filterRivals']);
     Route::put('/rival/{id}',[RivalController::class,'updateRival']);
     Route::delete('/rival/{id}',[RivalController::class,'deleteRival']);
     

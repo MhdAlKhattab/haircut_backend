@@ -103,6 +103,32 @@ class PurchaseController extends Controller
         return response()->json($purchases, 200);
     }
 
+    public function filterProductPurchases(Request $request, $branch_id)
+    {
+        $validatedData = Validator::make($request->all(),
+            [
+                'start_date' => 'required|date_format:Y-m-d',
+                'end_date' => 'required|date_format:Y-m-d|after_or_equal:start_date',
+            ]
+        );
+
+        if($validatedData->fails()){
+            return response()->json(["errors"=>$validatedData->errors()], 400);
+        }
+
+        $purchases = Purchase::where([
+                                ['branch_id', '=', $branch_id],
+                                ['type', 'LIKE', 'product']
+                            ])
+                            ->whereBetween('created_at', [$request['start_date'], $request['end_date']])
+                            ->with(['Supplier:id,name',
+                                    'products:id,name',
+                                    'sundry_products:id,name'])
+                            ->get();
+
+        return response()->json($purchases, 200);
+    }
+
     public function getSundryPurchases($branch_id)
     {
         $purchases = Purchase::where([
@@ -113,6 +139,32 @@ class PurchaseController extends Controller
                                 'products:id,name',
                                 'sundry_products:id,name'])
                         ->get();
+
+        return response()->json($purchases, 200);
+    }
+
+    public function filterSundryPurchases(Request $request, $branch_id)
+    {
+        $validatedData = Validator::make($request->all(),
+            [
+                'start_date' => 'required|date_format:Y-m-d',
+                'end_date' => 'required|date_format:Y-m-d|after_or_equal:start_date',
+            ]
+        );
+
+        if($validatedData->fails()){
+            return response()->json(["errors"=>$validatedData->errors()], 400);
+        }
+
+        $purchases = Purchase::where([
+                                ['branch_id', '=', $branch_id],
+                                ['type', 'LIKE', 'sundry']
+                            ])
+                            ->whereBetween('created_at', [$request['start_date'], $request['end_date']])
+                            ->with(['Supplier:id,name',
+                                    'products:id,name',
+                                    'sundry_products:id,name'])
+                            ->get();
 
         return response()->json($purchases, 200);
     }

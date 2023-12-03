@@ -47,6 +47,27 @@ class AdvancePayController extends Controller
         return response()->json($advance_pays, 200);
     }
 
+    public function filterAdvancePays(Request $request, $branch_id)
+    {
+        $validatedData = Validator::make($request->all(),
+            [
+                'start_date' => 'required|date_format:Y-m-d',
+                'end_date' => 'required|date_format:Y-m-d|after_or_equal:start_date',
+            ]
+        );
+
+        if($validatedData->fails()){
+            return response()->json(["errors"=>$validatedData->errors()], 400);
+        }
+
+        $advance_pays = Advance_Pay::where('branch_id', '=', $branch_id)
+                        ->whereBetween('created_at', [$request['start_date'], $request['end_date']])
+                        ->with('Employee:id,name')
+                        ->get();
+
+        return response()->json($advance_pays, 200);
+    }
+
     public function searchAdvancePays(Request $request, $branch_id)
     {
         $advance_pays = Advance_Pay::where('branch_id', '=', $branch_id)
