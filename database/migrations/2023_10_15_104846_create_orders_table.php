@@ -27,6 +27,7 @@ return new class extends Migration
             $table->float('representative_commission')->default(0);
             $table->float('tip')->default(0);
             $table->string('tip_pay_type')->nullable();
+            $table->boolean('state')->default(1);
 
             $table->timestamps();
         });

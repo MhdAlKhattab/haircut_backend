@@ -83,8 +83,11 @@ Route::group(['middleware' => 'auth:api'], function(){
     // Order
     Route::post('/order',[OrderController::class,'addOrder']);
     Route::get('/order/{branch}',[OrderController::class,'getOrders']);
+    Route::get('/deleted-order/{branch}',[OrderController::class,'getDeletedOrders']);
     Route::post('/order/{branch}',[OrderController::class,'searchOrders']);
+    Route::post('/deleted-order/{branch}',[OrderController::class,'searchDeletedOrders']);
     Route::post('/filter-order/{branch}',[OrderController::class,'filterOrders']);
+    Route::post('/filter-deleted-order/{branch}',[OrderController::class,'filterDeletedOrders']);
     Route::get('/daily-report/{branch}',[OrderController::class,'getDailyReport']);
     Route::post('/filter-daily-report/{branch}',[OrderController::class,'filterDailyReport']);
     Route::put('/order/{id}',[OrderController::class,'updateOrder']);

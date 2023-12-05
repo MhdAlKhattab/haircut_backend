@@ -25,6 +25,16 @@ class StopedReservationController extends Controller
             return response()->json(['errors'=>$validatedData->errors()], 400);
         }
 
+        $stoped_reservations = Stoped_Reservation::where([
+                                    ['branch_id', '=', $request['branch_id']],
+                                    ['employee_id', '=', $request['employee_id']],
+                                    ['date', '=', $request['date']],
+                                ])->get();
+        
+        if (count($stoped_reservations) != 0){
+            return response()->json(['errors' => 'This employee already have a dayoff in this date !'], 400);
+        }
+
         $stoped_reservation = new Stoped_Reservation;
 
         $stoped_reservation->branch_id = $request['branch_id'];
@@ -68,6 +78,16 @@ class StopedReservationController extends Controller
             $stoped_reservation->employee_id = $request['employee_id'];
         if($request['date'])
             $stoped_reservation->date = $request['date'];
+
+        $stoped_reservations = Stoped_Reservation::where([
+            ['branch_id', '=', $stoped_reservation->branch_id],
+            ['employee_id', '=', $stoped_reservation->employee_id],
+            ['date', '=', $stoped_reservation->date],
+        ])->get();
+
+        if (count($stoped_reservations) != 0){
+            return response()->json(['errors' => 'This employee already have a dayoff in this date !'], 400);
+        }
 
         $stoped_reservation->save();
         

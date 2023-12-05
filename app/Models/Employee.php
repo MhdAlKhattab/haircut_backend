@@ -33,7 +33,7 @@ class Employee extends Model
         'health_cost',
         'insurance_cost',
         'costs_responsible',
-        'state,'
+        'state',
     ];
 
     public function Branch(): BelongsTo

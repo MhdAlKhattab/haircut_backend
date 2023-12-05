@@ -122,7 +122,25 @@ class OrderController extends Controller
 
     public function getOrders($branch_id)
     {
-        $orders = Order::where('branch_id', '=', $branch_id)
+        $orders = Order::where([
+                            ['branch_id', '=', $branch_id],
+                            ['state', '=', 1],
+                        ])
+                        ->with(['Employee:id,name',
+                                'Customer:id,name,phone_number',
+                                'services:id,name',
+                                'products:id,name'])
+                        ->get();
+
+        return response()->json($orders, 200);
+    }
+
+    public function getDeletedOrders($branch_id)
+    {
+        $orders = Order::where([
+                            ['branch_id', '=', $branch_id],
+                            ['state', '=', 0],
+                        ])
                         ->with(['Employee:id,name',
                                 'Customer:id,name,phone_number',
                                 'services:id,name',
@@ -134,7 +152,28 @@ class OrderController extends Controller
 
     public function searchOrders(Request $request, $branch_id)
     {
-        $orders = Order::where('branch_id', '=', $branch_id)
+        $orders = Order::where([
+                                ['branch_id', '=', $branch_id],
+                                ['state', '=', 1],
+                            ])
+                        ->with(['Employee:id,name',
+                                'Customer:id,name,phone_number',
+                                'services:id,name',
+                                'products:id,name'])
+                        ->whereHas('Employee', function($q) use($request) {
+                                $q->where('name', 'LIKE', '%' . $request['query'] . '%');
+                            })
+                        ->get();
+
+        return response()->json($orders, 200);
+    }
+
+    public function searchDeletedOrders(Request $request, $branch_id)
+    {
+        $orders = Order::where([
+                                ['branch_id', '=', $branch_id],
+                                ['state', '=', 0],
+                            ])
                         ->with(['Employee:id,name',
                                 'Customer:id,name,phone_number',
                                 'services:id,name',
@@ -160,7 +199,37 @@ class OrderController extends Controller
             return response()->json(["errors"=>$validatedData->errors()], 400);
         }
         
-        $orders = Order::where('branch_id', '=', $branch_id)
+        $orders = Order::where([
+                                ['branch_id', '=', $branch_id],
+                                ['state', '=', 1],
+                            ])
+                        ->whereBetween('created_at', [$request['start_date'], $request['end_date']])
+                        ->with(['Employee:id,name',
+                                'Customer:id,name,phone_number',
+                                'services:id,name',
+                                'products:id,name'])
+                        ->get();
+
+        return response()->json($orders, 200);
+    }
+
+    public function filterDeletedOrders(Request $request, $branch_id)
+    {
+        $validatedData = Validator::make($request->all(),
+            [
+                'start_date' => 'required|date_format:Y-m-d',
+                'end_date' => 'required|date_format:Y-m-d|after_or_equal:start_date',
+            ]
+        );
+
+        if($validatedData->fails()){
+            return response()->json(["errors"=>$validatedData->errors()], 400);
+        }
+        
+        $orders = Order::where([
+                                ['branch_id', '=', $branch_id],
+                                ['state', '=', 0],
+                            ])
                         ->whereBetween('created_at', [$request['start_date'], $request['end_date']])
                         ->with(['Employee:id,name',
                                 'Customer:id,name,phone_number',
@@ -338,6 +407,10 @@ class OrderController extends Controller
             return response()->json(['errors' => 'There is no order with this id !'], 400);
         }
 
+        if($order->state == 0){
+            return response()->json(['errors' => 'This order is deleted !'], 400);
+        }
+
         // Get Employee Information
         $employee_info = Employee_Info::where('employee_id', '=', $order->employee_id)->first();
         $employee_info->total_order -= 1;
@@ -352,7 +425,10 @@ class OrderController extends Controller
             $product->save();
         }
 
-        $order->delete();
+
+        $order->state = 0;
+        $order->save();
+
         return response()->json(['message' => "Order Deleted"], 200);
     }
 }

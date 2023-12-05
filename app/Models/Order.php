@@ -29,6 +29,7 @@ class Order extends Model
         'representative_commission',
         'tip',
         'tip_pay_type',
+        'state',
     ];
 
     public function Branch(): BelongsTo
