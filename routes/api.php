@@ -107,6 +107,8 @@ Route::group(['middleware' => 'auth:api'], function(){
     // Reservation
     Route::post('/reservation',[ReservationController::class,'addReservation']);
     Route::get('/reservation/{branch}',[ReservationController::class,'getReservations']);
+    Route::post('/reservation/{branch}',[ReservationController::class,'searchReservations']);
+    Route::post('/filter-reservation/{branch}',[ReservationController::class,'filterReservations']);
     Route::put('/reservation/{id}',[ReservationController::class,'updateReservation']);
     Route::delete('/reservation/{id}',[ReservationController::class,'deleteReservation']);
 

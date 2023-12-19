@@ -60,6 +60,49 @@ class ReservationController extends Controller
         return response()->json($reservations, 200);
     }
 
+    public function searchReservations(Request $request, $branch_id)
+    {
+        $reservations = Reservation::where('branch_id', '=', $branch_id)
+                        ->with(['Employee:id,name',
+                                'Customer:id,name,phone_number',
+                                'services:id,name'])
+                        ->whereHas('Employee', function($q) use($request) {
+                            $q->where('name', 'LIKE', '%' . $request['query'] . '%');
+                        })
+                        ->orWhereHas('Customer', function($q) use($request) {
+                            $q->where('name', 'LIKE', '%' . $request['query'] . '%');
+                        })
+                        ->select('id', 'branch_id', 'employee_id', 'customer_id',
+                                 'date', 'total_duration', 'total_amount')
+                        ->get();
+
+        return response()->json($reservations, 200);
+    }
+
+    public function filterReservations(Request $request, $branch_id)
+    {
+        $validatedData = Validator::make($request->all(),
+        [
+            'start_date' => 'required|date_format:Y-m-d',
+            'end_date' => 'required|date_format:Y-m-d|after_or_equal:start_date',
+        ]);
+
+        if($validatedData->fails()){
+            return response()->json(["errors"=>$validatedData->errors()], 400);
+        }
+
+        $reservations = Reservation::where('branch_id', '=', $branch_id)
+                        ->whereBetween('date', [$request['start_date'], $request['end_date']])
+                        ->with(['Employee:id,name',
+                                'Customer:id,name,phone_number',
+                                'services:id,name'])
+                        ->select('id', 'branch_id', 'employee_id', 'customer_id',
+                                 'date', 'total_duration', 'total_amount')
+                        ->get();
+
+        return response()->json($reservations, 200);
+    }
+
     public function updateReservation(Request $request, $id)
     {
         $reservation = Reservation::find($id);
