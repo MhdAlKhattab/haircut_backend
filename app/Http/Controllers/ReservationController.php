@@ -17,7 +17,7 @@ class ReservationController extends Controller
             'customer_id' => 'required|numeric|exists:customers,id',
             'services' => 'required|array|min:1',
             'services.*' => 'required|numeric|exists:services,id',
-            'date' => 'required|date_format:Y-m-d H:i',
+            'date' => 'required|date_format:Y-m-d H:i|after:today',
             'total_duration' => 'required|numeric',
             'total_amount' => 'required|numeric',
         ]);
@@ -117,7 +117,7 @@ class ReservationController extends Controller
                 'customer_id' => 'numeric|exists:customers,id',
                 'services' => 'array|min:1',
                 'services.*' => 'numeric|exists:services,id',
-                'date' => 'date_format:Y-m-d H:i:s',
+                'date' => 'date_format:Y-m-d H:i|after:today',
                 'total_duration' => 'numeric',
                 'total_amount' => 'numeric',
             ]
