@@ -115,6 +115,8 @@ Route::group(['middleware' => 'auth:api'], function(){
     // Stoped Reservation
     Route::post('/stoped-reservation',[StopedReservationController::class,'addStopedReservation']);
     Route::get('/stoped-reservation/{branch}',[StopedReservationController::class,'getStopedReservations']);
+    Route::post('/stoped-reservation/{branch}',[StopedReservationController::class,'searchStopedReservations']);
+    Route::post('/filter-stoped-reservation/{branch}',[StopedReservationController::class,'filterStopedReservations']);    
     Route::put('/stoped-reservation/{id}',[StopedReservationController::class,'updateStopedReservation']);
     Route::delete('/stoped-reservation/{id}',[StopedReservationController::class,'deleteStopedReservation']);
 

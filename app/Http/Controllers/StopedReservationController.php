@@ -55,6 +55,38 @@ class StopedReservationController extends Controller
         return response()->json($stoped_reservations, 200);
     }
 
+    public function searchStopedReservations(Request $request, $branch_id)
+    {
+        $stoped_reservations = Stoped_Reservation::where('branch_id', '=', $branch_id)
+                                ->with('Employee:id,name')
+                                ->whereHas('Employee', function($q) use($request) {
+                                    $q->where('name', 'LIKE', '%' . $request['query'] . '%');
+                                })
+                                ->get();
+
+        return response()->json($stoped_reservations, 200);
+    }
+
+    public function filterStopedReservations(Request $request, $branch_id)
+    {
+        $validatedData = Validator::make($request->all(),
+        [
+            'start_date' => 'required|date_format:Y-m-d',
+            'end_date' => 'required|date_format:Y-m-d|after_or_equal:start_date',
+        ]);
+
+        if($validatedData->fails()){
+            return response()->json(["errors"=>$validatedData->errors()], 400);
+        }
+
+        $stoped_reservations = Stoped_Reservation::where('branch_id', '=', $branch_id)
+                                ->whereBetween('date', [$request['start_date'], $request['end_date']])
+                                ->with('Employee:id,name')
+                                ->get();
+
+        return response()->json($stoped_reservations, 200);
+    }
+
     public function updateStopedReservation(Request $request, $id)
     {
         $stoped_reservation = Stoped_Reservation::find($id);
