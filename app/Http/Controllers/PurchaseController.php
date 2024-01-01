@@ -95,9 +95,10 @@ class PurchaseController extends Controller
                                 ['branch_id', '=', $branch_id],
                                 ['type', 'LIKE', 'product']
                             ])
-                        ->with(['Supplier:id,name',
-                                'products:id,name',
-                                'sundry_products:id,name'])
+                        ->with(['Supplier:id,name,tax_number',
+                                'products:id,name,purchasing_price',
+                                'sundry_products:id,name,price'
+                                ])
                         ->get();
 
         return response()->json($purchases, 200);
@@ -121,9 +122,10 @@ class PurchaseController extends Controller
                                 ['type', 'LIKE', 'product']
                             ])
                             ->whereBetween('created_at', [$request['start_date'], $request['end_date']])
-                            ->with(['Supplier:id,name',
-                                    'products:id,name',
-                                    'sundry_products:id,name'])
+                            ->with(['Supplier:id,name,tax_number',
+                                    'products:id,name,purchasing_price',
+                                    'sundry_products:id,name,price'
+                                    ])
                             ->get();
 
         return response()->json($purchases, 200);
@@ -135,9 +137,10 @@ class PurchaseController extends Controller
                                 ['branch_id', '=', $branch_id],
                                 ['type', 'LIKE', 'sundry']
                             ])
-                        ->with(['Supplier:id,name',
-                                'products:id,name',
-                                'sundry_products:id,name'])
+                            ->with(['Supplier:id,name,tax_number',
+                                    'products:id,name,purchasing_price',
+                                    'sundry_products:id,name,price'
+                                    ])
                         ->get();
 
         return response()->json($purchases, 200);
@@ -161,9 +164,10 @@ class PurchaseController extends Controller
                                 ['type', 'LIKE', 'sundry']
                             ])
                             ->whereBetween('created_at', [$request['start_date'], $request['end_date']])
-                            ->with(['Supplier:id,name',
-                                    'products:id,name',
-                                    'sundry_products:id,name'])
+                            ->with(['Supplier:id,name,tax_number',
+                                    'products:id,name,purchasing_price',
+                                    'sundry_products:id,name,price'
+                                    ])
                             ->get();
 
         return response()->json($purchases, 200);
@@ -175,9 +179,10 @@ class PurchaseController extends Controller
                                 ['branch_id', '=', $branch_id],
                                 ['type', 'LIKE', 'product']
                             ])
-                        ->with(['Supplier:id,name',
-                                'products:id,name',
-                                'sundry_products:id,name'])
+                            ->with(['Supplier:id,name,tax_number',
+                                    'products:id,name,purchasing_price',
+                                    'sundry_products:id,name,price'
+                                    ])
                         ->whereHas('Supplier', function($q) use($request) {
                                 $q->where('name', 'LIKE', '%' . $request['query'] . '%');
                             })
@@ -192,9 +197,10 @@ class PurchaseController extends Controller
                                 ['branch_id', '=', $branch_id],
                                 ['type', 'LIKE', 'sundry']
                             ])
-                        ->with(['Supplier:id,name',
-                                'products:id,name',
-                                'sundry_products:id,name'])
+                            ->with(['Supplier:id,name,tax_number',
+                                    'products:id,name,purchasing_price',
+                                    'sundry_products:id,name,price'
+                                    ])
                         ->whereHas('Supplier', function($q) use($request) {
                                 $q->where('name', 'LIKE', '%' . $request['query'] . '%');
                             })
