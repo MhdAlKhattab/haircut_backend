@@ -17,7 +17,7 @@ return new class extends Migration
 
             $table->string('name');
             $table->boolean('tax_state');
-            $table->integer('tax_number');
+            $table->string('tax_number');
 
             $table->timestamps();
         });
