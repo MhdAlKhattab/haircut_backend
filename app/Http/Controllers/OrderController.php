@@ -130,6 +130,7 @@ class OrderController extends Controller
                                 'Customer:id,name,phone_number',
                                 'services:id,name',
                                 'products:id,name'])
+                        ->orderBy('created_at', 'DESC')
                         ->get();
 
         return response()->json($orders, 200);
@@ -145,6 +146,7 @@ class OrderController extends Controller
                                 'Customer:id,name,phone_number',
                                 'services:id,name',
                                 'products:id,name'])
+                        ->orderBy('created_at', 'DESC')
                         ->get();
 
         return response()->json($orders, 200);
@@ -163,6 +165,7 @@ class OrderController extends Controller
                         ->whereHas('Employee', function($q) use($request) {
                                 $q->where('name', 'LIKE', '%' . $request['query'] . '%');
                             })
+                        ->orderBy('created_at', 'DESC')
                         ->get();
 
         return response()->json($orders, 200);
@@ -181,6 +184,7 @@ class OrderController extends Controller
                         ->whereHas('Employee', function($q) use($request) {
                                 $q->where('name', 'LIKE', '%' . $request['query'] . '%');
                             })
+                        ->orderBy('created_at', 'DESC')
                         ->get();
 
         return response()->json($orders, 200);
@@ -208,6 +212,7 @@ class OrderController extends Controller
                                 'Customer:id,name,phone_number',
                                 'services:id,name',
                                 'products:id,name'])
+                        ->orderBy('created_at', 'DESC')
                         ->get();
 
         return response()->json($orders, 200);
@@ -235,6 +240,7 @@ class OrderController extends Controller
                                 'Customer:id,name,phone_number',
                                 'services:id,name',
                                 'products:id,name'])
+                        ->orderBy('created_at', 'DESC')
                         ->get();
 
         return response()->json($orders, 200);
