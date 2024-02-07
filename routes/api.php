@@ -23,6 +23,7 @@ use App\Http\Controllers\CashierWithdrawController;
 use App\Http\Controllers\AdvancePayController;
 use App\Http\Controllers\RivalController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -213,7 +214,10 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::post('/filter-rival/{branch}',[RivalController::class,'filterRivals']);
     Route::put('/rival/{id}',[RivalController::class,'updateRival']);
     Route::delete('/rival/{id}',[RivalController::class,'deleteRival']);
-    
+
+    // Dashboard
+    Route::get('/dashboard/{branch}',[DashboardController::class,'index']);
+    Route::get('/employee-dashboard/{branch}',[DashboardController::class,'employeeRevenues']);
 });
 
 

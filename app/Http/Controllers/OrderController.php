@@ -249,6 +249,7 @@ class OrderController extends Controller
     public function getDailyReport($branch_id)
     {
         $daily_orders = DB::table('orders as o')
+                ->where('branch_id', '=', $branch_id)
                 ->select(array(DB::Raw('count(o.id) as Total_Orders'),
                             DB::Raw('sum(o.amount_after_discount) as Total_Revenues'),
                             DB::Raw('sum(o.employee_commission) as Total_Commissions'),
@@ -274,6 +275,7 @@ class OrderController extends Controller
         }
 
         $daily_orders = DB::table('orders as o')
+                ->where('branch_id', '=', $branch_id)
                 ->whereBetween('o.created_at', [$request['start_date'], $request['end_date']])
                 ->select(array(DB::Raw('count(o.id) as Total_Orders'),
                             DB::Raw('sum(o.amount_after_discount) as Total_Revenues'),
