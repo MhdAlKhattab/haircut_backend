@@ -217,7 +217,6 @@ Route::group(['middleware' => 'auth:api'], function(){
 
     // Dashboard
     Route::get('/dashboard/{branch}',[DashboardController::class,'index']);
-    Route::get('/employee-dashboard/{branch}',[DashboardController::class,'employeeRevenues']);
 });
 
 

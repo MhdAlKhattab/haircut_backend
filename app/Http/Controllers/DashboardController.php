@@ -15,7 +15,63 @@ class DashboardController extends Controller
 {
     public function index($branch_id)
     {
+        return response()->json([
+            'statistics' => $this->getStatistics($branch_id),
+            'global_report' => $this->globalReport($branch_id),
+            'employee_revenues' => $this->employeeRevenues($branch_id),
+        ], 200);
+    }
+
+    public function getStatistics($branch_id)
+    {
+        $daily_orders = DB::table('orders as o')
+                        ->where('branch_id', '=', $branch_id)
+                        ->select(array(DB::Raw('count(o.id) as Total_Orders'),
+                                    DB::Raw('sum(o.amount_after_discount) as Total_Revenues'),
+                                    DB::Raw('DATE(o.created_at) as day')))
+                        ->groupBy('day')
+                        ->get();
+
+        // Compute avg daily orders and revenues
+        $sumDailyOrders = 0;
+        $sumDailyRevenues = 0;
+        foreach($daily_orders as $order){
+            $sumDailyOrders += $order->Total_Orders;
+            $sumDailyRevenues += $order->Total_Revenues;
+        }
+        $avgDailyOrders = $sumDailyOrders / count($daily_orders);
+        $avgDailyRevenues = $sumDailyRevenues / count($daily_orders);
+
+        $weekly_orders = DB::table('orders as o')
+                        ->where('branch_id', '=', $branch_id)
+                        ->select(array(DB::Raw('count(o.id) as Total_Orders'),
+                                    DB::Raw('sum(o.amount_after_discount) as Total_Revenues'),
+                                    DB::Raw('WEEK(o.created_at) as week')))
+                        ->groupBy('week')
+                        ->get();
+
+        // Compute avg Weekly orders and revenues
+        $sumWeeklyOrders = 0;
+        $sumWeeklyRevenues = 0;
+        foreach($weekly_orders as $order){
+            $sumWeeklyOrders += $order->Total_Orders;
+            $sumWeeklyRevenues += $order->Total_Revenues;
+        }
+        $avgWeeklyOrders = $sumWeeklyOrders / count($weekly_orders);
+        $avgWeeklyRevenues = $sumWeeklyRevenues / count($weekly_orders);
+
+        return [
+                'avg_daily_orders' => $avgDailyOrders,
+                'avg_daily_revenues' => $avgDailyRevenues,
+                'avg_weekly_orders'  => $avgWeeklyOrders,
+                'avg_weekly_revenues' => $avgWeeklyRevenues
+            ];
+    }
+
+    public function globalReport($branch_id)
+    {
         $day = Carbon::now()->day;
+        $day = 7;
 
         $totalOrders = Order::where('branch_id', '=', $branch_id)
                         ->whereDay('created_at', '=', $day)
@@ -83,22 +139,24 @@ class DashboardController extends Controller
         // Compute day's remaining commission
         $remainingDayCommission = $totalDayCommissions - $payedDayCommission;
 
-        return response()->json(['total_revenues' => $totalRevenues,
-                        'online_total_revenues' => $onlineTotalRevenues,
-                        'cash_total_revenues' => $cashTotalRevenues,
-                        'total_orders' => $totalOrders,
-                        'total_purchases' => $totalPurchases,
-                        'sundry_total_purchases' => $sundryTotalPurchases,
-                        'general_services' => $generalServices,
-                        'total_commissions' => $totalDayCommissions,
-                        'payed_commissions' => $payedDayCommission,
-                        'remaining_commissions' => $remainingDayCommission,
-                        ], 200);
+        return [
+            'total_revenues' => $totalRevenues,
+            'online_total_revenues' => $onlineTotalRevenues,
+            'cash_total_revenues' => $cashTotalRevenues,
+            'total_orders' => $totalOrders,
+            'total_purchases' => $totalPurchases,
+            'sundry_total_purchases' => $sundryTotalPurchases,
+            'general_services' => $generalServices,
+            'total_commissions' => $totalDayCommissions,
+            'payed_commissions' => $payedDayCommission,
+            'remaining_commissions' => $remainingDayCommission,
+        ];
     }
 
     public function employeeRevenues($branch_id)
     {
-        $day = Carbon::now()->day;
+        // $day = Carbon::now()->day;
+        $day = 7;
 
         $employeeRevenues = DB::table('orders as o')
                         ->where('branch_id', '=', $branch_id)
@@ -113,7 +171,15 @@ class DashboardController extends Controller
                         ->get();
 
         $employeesArray = [];
+        $max_revenue = -1;
+        $max_index = -1;
         foreach ($employeeRevenues as $object){
+            // Check the top revenue of employees
+            if ($object->Total_Revenues > $max_revenue){
+                $max_revenue = $object->Total_Revenues;
+                $max_index = count($employeesArray);
+            }
+
             $employee = Employee::with('Info')->find($object->employee_id);
 
             // Compute the difference between total commission and day's commission
@@ -138,6 +204,6 @@ class DashboardController extends Controller
                                     ];
         }
 
-        return $employeesArray;
+        return ['employees' => $employeesArray, 'top_employee_index' => $max_index];
     }
 }
