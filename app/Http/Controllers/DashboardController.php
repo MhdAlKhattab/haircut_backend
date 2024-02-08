@@ -71,7 +71,6 @@ class DashboardController extends Controller
     public function globalReport($branch_id)
     {
         $day = Carbon::now()->day;
-        $day = 7;
 
         $totalOrders = Order::where('branch_id', '=', $branch_id)
                         ->whereDay('created_at', '=', $day)
@@ -155,8 +154,7 @@ class DashboardController extends Controller
 
     public function employeeRevenues($branch_id)
     {
-        // $day = Carbon::now()->day;
-        $day = 7;
+        $day = Carbon::now()->day;
 
         $employeeRevenues = DB::table('orders as o')
                         ->where('branch_id', '=', $branch_id)
