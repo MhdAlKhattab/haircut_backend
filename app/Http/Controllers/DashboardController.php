@@ -10,6 +10,7 @@ use App\Models\Purchase;
 use App\Models\General_Service;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Config;
 
 class DashboardController extends Controller
 {
@@ -70,7 +71,7 @@ class DashboardController extends Controller
 
     public function globalReport($branch_id)
     {
-        $date = Carbon::now()->format('Y-m-d');   
+        $date = Carbon::now()->toDateString();
 
         $totalOrders = Order::where('branch_id', '=', $branch_id)
                         ->whereDate('created_at', '=', $date)
@@ -154,7 +155,7 @@ class DashboardController extends Controller
 
     public function employeeRevenues($branch_id)
     {
-        $date = Carbon::now()->format('Y-m-d');
+        $date = Carbon::now()->toDateString();
 
         $employeeRevenues = DB::table('orders as o')
                         ->where('branch_id', '=', $branch_id)
