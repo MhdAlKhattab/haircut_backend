@@ -39,8 +39,8 @@ class DashboardController extends Controller
             $sumDailyOrders += $order->Total_Orders;
             $sumDailyRevenues += $order->Total_Revenues;
         }
-        $avgDailyOrders = $sumDailyOrders / count($daily_orders);
-        $avgDailyRevenues = $sumDailyRevenues / count($daily_orders);
+        $avgDailyOrders = round($sumDailyOrders / count($daily_orders));
+        $avgDailyRevenues = round($sumDailyRevenues / count($daily_orders));
 
         $weekly_orders = DB::table('orders as o')
                         ->where('branch_id', '=', $branch_id)
@@ -57,8 +57,8 @@ class DashboardController extends Controller
             $sumWeeklyOrders += $order->Total_Orders;
             $sumWeeklyRevenues += $order->Total_Revenues;
         }
-        $avgWeeklyOrders = $sumWeeklyOrders / count($weekly_orders);
-        $avgWeeklyRevenues = $sumWeeklyRevenues / count($weekly_orders);
+        $avgWeeklyOrders = round($sumWeeklyOrders / count($weekly_orders));
+        $avgWeeklyRevenues = round($sumWeeklyRevenues / count($weekly_orders));
 
         return [
                 'avg_daily_orders' => $avgDailyOrders,
@@ -70,47 +70,47 @@ class DashboardController extends Controller
 
     public function globalReport($branch_id)
     {
-        $day = Carbon::now()->day;
+        $date = Carbon::now()->format('Y-m-d');   
 
         $totalOrders = Order::where('branch_id', '=', $branch_id)
-                        ->whereDay('created_at', '=', $day)
+                        ->whereDate('created_at', '=', $date)
                         ->count('id');
 
         $totalRevenues = Order::where('branch_id', '=', $branch_id)
-                        ->whereDay('created_at', '=', $day)
+                        ->whereDate('created_at', '=', $date)
                         ->sum('amount_after_discount');
 
         $onlineTotalRevenues = Order::where([
                                     ['branch_id', '=', $branch_id],
                                     ['amount_pay_type', 'LIKE', 'online'],
                                 ])
-                        ->whereDay('created_at', '=', $day)
+                        ->whereDate('created_at', '=', $date)
                         ->sum('amount_after_discount');
 
         $cashTotalRevenues = Order::where([
                                     ['branch_id', '=', $branch_id],
                                     ['amount_pay_type', 'LIKE', 'cash'],
                                 ])
-                        ->whereDay('created_at', '=', $day)
+                        ->whereDate('created_at', '=', $date)
                         ->sum('amount_after_discount');
 
         $totalDayCommissions = Order::where('branch_id', '=', $branch_id)
-                        ->whereDay('created_at', '=', $day)
+                        ->whereDate('created_at', '=', $date)
                         ->sum('employee_commission');
 
         $totalPurchases = Purchase::where('branch_id', '=', $branch_id)
-                        ->whereDay('created_at', '=', $day)
+                        ->whereDate('created_at', '=', $date)
                         ->sum('amount_after_discount');
 
         $sundryTotalPurchases = Purchase::where([
                                     ['branch_id', '=', $branch_id],
                                     ['type', 'LIKE', 'sundry'],
                                 ])
-                        ->whereDay('created_at', '=', $day)
+                        ->whereDate('created_at', '=', $date)
                         ->sum('amount_after_discount');
 
         $generalServices = General_Service::where('branch_id', '=', $branch_id)
-                        ->whereDay('created_at', '=', $day)
+                        ->whereDate('created_at', '=', $date)
                         ->sum('amount');
 
         $employees = Employee::where('branch_id', '=', $branch_id)
@@ -154,11 +154,11 @@ class DashboardController extends Controller
 
     public function employeeRevenues($branch_id)
     {
-        $day = Carbon::now()->day;
+        $date = Carbon::now()->format('Y-m-d');
 
         $employeeRevenues = DB::table('orders as o')
                         ->where('branch_id', '=', $branch_id)
-                        ->whereDay('created_at', '=', $day)
+                        ->whereDate('created_at', '=', $date)
                         ->select(array(
                                     DB::Raw('count(o.id) as Total_Orders'),
                                     DB::Raw('sum(o.amount_after_discount) as Total_Revenues'),
