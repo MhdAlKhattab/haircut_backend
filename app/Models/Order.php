@@ -20,6 +20,8 @@ class Order extends Model
         'employee_id',
         'customer_id',
         'amount',
+        'cash_amount',
+        'online_amount',
         'amount_pay_type',
         'discount',
         'amount_after_discount',

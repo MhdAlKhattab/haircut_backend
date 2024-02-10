@@ -40,8 +40,8 @@ class DashboardController extends Controller
             $sumDailyOrders += $order->Total_Orders;
             $sumDailyRevenues += $order->Total_Revenues;
         }
-        $avgDailyOrders = round($sumDailyOrders / count($daily_orders));
-        $avgDailyRevenues = round($sumDailyRevenues / count($daily_orders));
+        $avgDailyOrders = $sumDailyOrders / count($daily_orders);
+        $avgDailyRevenues = $sumDailyRevenues / count($daily_orders);
 
         $weekly_orders = DB::table('orders as o')
                         ->where('branch_id', '=', $branch_id)
@@ -58,14 +58,14 @@ class DashboardController extends Controller
             $sumWeeklyOrders += $order->Total_Orders;
             $sumWeeklyRevenues += $order->Total_Revenues;
         }
-        $avgWeeklyOrders = round($sumWeeklyOrders / count($weekly_orders));
-        $avgWeeklyRevenues = round($sumWeeklyRevenues / count($weekly_orders));
+        $avgWeeklyOrders = $sumWeeklyOrders / count($weekly_orders);
+        $avgWeeklyRevenues = $sumWeeklyRevenues / count($weekly_orders);
 
         return [
-                'avg_daily_orders' => $avgDailyOrders,
-                'avg_daily_revenues' => $avgDailyRevenues,
-                'avg_weekly_orders'  => $avgWeeklyOrders,
-                'avg_weekly_revenues' => $avgWeeklyRevenues
+                'avg_daily_orders' => round($avgDailyOrders),
+                'avg_daily_revenues' => round($avgDailyRevenues),
+                'avg_weekly_orders'  => round($avgWeeklyOrders),
+                'avg_weekly_revenues' => round($avgWeeklyRevenues),
             ];
     }
 
@@ -140,16 +140,16 @@ class DashboardController extends Controller
         $remainingDayCommission = $totalDayCommissions - $payedDayCommission;
 
         return [
-            'total_revenues' => $totalRevenues,
-            'online_total_revenues' => $onlineTotalRevenues,
-            'cash_total_revenues' => $cashTotalRevenues,
-            'total_orders' => $totalOrders,
-            'total_purchases' => $totalPurchases,
-            'sundry_total_purchases' => $sundryTotalPurchases,
-            'general_services' => $generalServices,
-            'total_commissions' => $totalDayCommissions,
-            'payed_commissions' => $payedDayCommission,
-            'remaining_commissions' => $remainingDayCommission,
+            'total_revenues' => round($totalRevenues),
+            'online_total_revenues' => round($onlineTotalRevenues),
+            'cash_total_revenues' => round($cashTotalRevenues),
+            'total_orders' => round($totalOrders),
+            'total_purchases' => round($totalPurchases),
+            'sundry_total_purchases' => round($sundryTotalPurchases),
+            'general_services' => round($generalServices),
+            'total_commissions' => round($totalDayCommissions),
+            'payed_commissions' => round($payedDayCommission),
+            'remaining_commissions' => round($remainingDayCommission),
         ];
     }
 
@@ -196,10 +196,10 @@ class DashboardController extends Controller
             $employeesArray[] = (object) [
                                         'id' => $object->employee_id,
                                         'name' => $employee->name,
-                                        'total_revenues' => $object->Total_Revenues,
-                                        'total_commissions' => $object->Total_Commissions,
-                                        'payed_commissions' => $payedCommission,
-                                        'remaining_commissions' => $remainingCommission,
+                                        'total_revenues' => round($object->Total_Revenues),
+                                        'total_commissions' => round($object->Total_Commissions),
+                                        'payed_commissions' => round($payedCommission),
+                                        'remaining_commissions' => round($remainingCommission),
                                     ];
         }
 

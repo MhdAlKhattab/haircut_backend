@@ -19,6 +19,8 @@ return new class extends Migration
 
             $table->float('amount');
             $table->string('amount_pay_type');
+            $table->float('cash_amount')->default(0);
+            $table->float('online_amount')->default(0);
             $table->float('discount')->default(0);
             $table->float('amount_after_discount')->default(-1);
             $table->float('tax');
