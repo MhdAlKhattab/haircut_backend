@@ -35,13 +35,17 @@ class DashboardController extends Controller
 
         // Compute avg daily orders and revenues
         $sumDailyOrders = 0;
+        $avgDailyOrders = 0;
         $sumDailyRevenues = 0;
+        $avgDailyRevenues = 0;
         foreach($daily_orders as $order){
             $sumDailyOrders += $order->Total_Orders;
             $sumDailyRevenues += $order->Total_Revenues;
         }
-        $avgDailyOrders = $sumDailyOrders / count($daily_orders);
-        $avgDailyRevenues = $sumDailyRevenues / count($daily_orders);
+        if (count($daily_orders) != 0){
+            $avgDailyOrders = $sumDailyOrders / count($daily_orders);
+            $avgDailyRevenues = $sumDailyRevenues / count($daily_orders);
+        }
 
         $weekly_orders = DB::table('orders as o')
                         ->where('branch_id', '=', $branch_id)
@@ -53,13 +57,17 @@ class DashboardController extends Controller
 
         // Compute avg Weekly orders and revenues
         $sumWeeklyOrders = 0;
+        $avgWeeklyOrders = 0;
         $sumWeeklyRevenues = 0;
+        $avgWeeklyRevenues = 0;
         foreach($weekly_orders as $order){
             $sumWeeklyOrders += $order->Total_Orders;
             $sumWeeklyRevenues += $order->Total_Revenues;
         }
-        $avgWeeklyOrders = $sumWeeklyOrders / count($weekly_orders);
-        $avgWeeklyRevenues = $sumWeeklyRevenues / count($weekly_orders);
+        if (count($weekly_orders) != 0){
+            $avgWeeklyOrders = $sumWeeklyOrders / count($weekly_orders);
+            $avgWeeklyRevenues = $sumWeeklyRevenues / count($weekly_orders);
+        }
 
         return [
                 'avg_daily_orders' => round($avgDailyOrders),
